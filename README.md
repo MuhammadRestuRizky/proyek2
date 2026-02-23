@@ -1,2 +1,2 @@
-# prouyek2
+# proyek2
 proyek 2 semester 4
