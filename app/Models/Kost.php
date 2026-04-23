@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\User;
+use App\Models\Fasilitas;
 
 class Kost extends Model
 {
@@ -18,15 +18,19 @@ class Kost extends Model
         'harga',
         'tipe',
         'kamar_mandi',
-        'foto',
-        'status'
+        'status',
+        'maps'
     ];
 
-    /**
-     * Relasi: 1 kost dimiliki oleh 1 user (pemilik)
-     */
-    public function user()
+    // 🔥 RELASI FOTO
+    public function fotos()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(KostFoto::class);
+    }
+
+    // 🔥 RELASI FASILITAS (INI YANG HILANG TADI)
+    public function fasilitas()
+    {
+        return $this->belongsToMany(Fasilitas::class, 'fasilitas_kost');
     }
 }

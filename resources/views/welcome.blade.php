@@ -3,127 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mykost'In</title>
+    <title>KostKu</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100">
 
 <!-- NAVBAR -->
-<nav class="bg-blue-600 text-white px-10 py-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold">Mykost'In</h1>
+<nav class="fixed top-0 left-0 w-full z-50 bg-black text-white px-6 py-3 flex items-center justify-between">
+    <!-- LOGO -->
+    <div class="flex items-center gap-3">
+        <h1 class="text-lg font-bold">KostKu</h1>
 
-    <!-- PROFIL -->
-    <div class="relative">
+        @guest
+            <span class="bg-gray-700 text-xs px-2 py-1 rounded">
+                Admin
+            </span>
+        @endguest
+    </div>
+
+    <!-- MENU TENGAH -->
+    @auth
+    <div class="flex items-center gap-2 text-sm">
+
+        <a href="/riwayat"
+            class="px-3 py-1 rounded-md {{ request()->is('riwayat') ? 'bg-gray-700' : 'hover:bg-gray-800' }}">
+            📋 Riwayat
+        </a>
+
+        <a href="/kost"
+            class="px-3 py-1 rounded-md {{ request()->is('kost') ? 'bg-gray-700' : 'hover:bg-gray-800' }}">
+            🔍 Pencarian
+        </a>
+
+        <a href="/"
+            class="px-3 py-1 rounded-md {{ request()->is('/') ? 'bg-gray-700' : 'hover:bg-gray-800' }}">
+            🏠 Beranda
+        </a>
+
+    </div>
+    @endauth
+
+    <!-- KANAN -->
+    <div class="flex items-center gap-3">
+
         @auth
-            <button id="profileBtn" class="flex items-center gap-2 focus:outline-none">
-                <img 
-                    src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}" 
-                    class="w-9 h-9 rounded-full border"
-                >
-                <span>{{ auth()->user()->name }}</span>
-            </button>
+            <!-- 🔥 UNIVERSAL PROFILE LINK -->
+            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 hover:opacity-80 transition">
 
-            <!-- Dropdown -->
-            <div id="profileMenu" class="hidden absolute right-0 mt-3 bg-white text-gray-700 rounded-xl shadow-lg w-40">
-                <a href="/dashboard" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
-                <form method="POST" action="/logout">
-                    @csrf
-                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100">
-                        Logout
-                    </button>
-                </form>
-            </div>
+                <span class="text-sm">
+                    {{ auth()->user()->name }}
+                </span>
+
+                <img 
+                    src="{{ auth()->user()->photo 
+                        ? asset('storage/' . auth()->user()->photo) 
+                        : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}"
+                    class="w-8 h-8 rounded-full border border-white">
+            </a>
+
         @else
-            <a href="/admin/login" class="flex items-center gap-2 hover:underline">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" 
-                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" 
-                          stroke-width="2" 
-                          d="M5.121 17.804A9 9 0 1112 21v-2m0 0a5 5 0 100-10 5 5 0 000 10z"/>
-                </svg>
-                Login
+            <!-- SEBELUM LOGIN -->
+            <a href="/login"
+                class="bg-green-500 hover:bg-green-600 px-4 py-1 rounded text-sm">
+                Masuk
+            </a>
+
+            <a href="/register"
+                class="bg-red-500 hover:bg-red-600 px-4 py-1 rounded text-sm">
+                Daftar
             </a>
         @endauth
     </div>
 </nav>
-
-<!-- HERO SEARCH -->
-<div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 text-center">
-    <h2 class="text-4xl font-bold mb-3">
-        Cari Kost & Kontrakan Yang Anda Inginkan
+   
+<!-- HERO -->
+<section class="bg-gradient-to-r from-gray-800 to-gray-600 text-white pt-20 pb-3 text-center max-h-[290px] overflow-hidden">
+    <h2 class="text-4xl font-bold mb-1">
+        Temukan Kost & Kontrakan Impianmu
     </h2>
-    <p class="text-white/80 mb-10">
-        Temukan Kamar Kost & Kontrakan Di Daerah yang Anda Inginkan Dengan Kualitas Terbaik dan Harga Yang Terjangjau
+    <p class="text-gray-300 mb-2">
+        Ribuan pilihan kost dan kontrakan terbaik dengan harga terjangkau
+    </p>
 
-    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl mx-auto p-6 text-gray-700">
-        <form action="/kost" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
-
+    <!-- SEARCH -->
+    <div class="bg-white rounded-xl shadow-lg max-w-6xl mx-auto p-1 text-gray-700">
+        <form action="/kost" method="GET" class="grid md:grid-cols-12 gap-2">
             <input type="text" name="q"
-                placeholder="Lokasi atau nama kost..."
-                class="border rounded-lg px-4 py-3">
+                placeholder="Cari lokasi atau nama..."
+                class="border rounded-lg px-3 h-12 w-full md:col-span-7">
 
-            <select name="harga" class="border rounded-lg px-4 py-3">
-                <option value="">Semua Harga</option>
-                <option value="0-500000">< 500rb</option>
-                <option value="500000-1000000">500rb - 1jt</option>
-                <option value="1000000-2000000">1jt - 2jt</option>
-                <option value="2000000+">> 2jt</option>
+            <select name="tipe" class="border rounded-lg px-3 h-12 w-full md:col-span-2">
+                <option value="" dissable selected hidden>Tipe</option>
+                <option value="kost">Kost</option>
+                <option value="kontrakan">Kontrakan</option>
             </select>
 
-            <select name="gender" class="border rounded-lg px-4 py-3">
-                <option value="">Semua Tipe</option>
-                <option value="putra">Putra</option>
-                <option value="putri">Putri</option>
-                <option value="campur">Campur</option>
+            <select name="harga" class="border rounded-lg px-3 h-11 w-full md:col-span-2">
+                <option value="" disabled selected hidden>Harga</option>
+                <option value="murah">Murah</option>
+                <option value="sedang">Sedang</option>
+                <option value="mahal">Mahal</option>
             </select>
 
-            <select name="ac" class="border rounded-lg px-4 py-3">
-                <option value="">AC / Non AC</option>
-                <option value="1">AC</option>
-                <option value="0">Non AC</option>
-            </select>
-
-            <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">
-                🔍 Cari
+            <button class="bg-black text-white rounded-lg h-12 w-full md:col-span-1">
+                Cari
             </button>
         </form>
     </div>
-</div>
+</section>
 
-<!-- CONTAINER HASIL -->
-<div class="max-w-6xl mx-auto p-8">
-    <h3 class="text-xl font-semibold mb-6">Properti Terbaru</h3>
+<!-- FITUR -->
+<section class="max-w-6xl mx-auto grid md:grid-cols-4 gap-4 mt-1 px-5">
+    <div class="bg-white p-4 rounded-xl shadow text-center">
+        <h4 class="font-semibold">Pilihan Lengkap</h4>
+        <p class="text-sm text-gray-500">Ribuan kost tersedia</p>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow text-center">
+        <h4 class="font-semibold">Lokasi Strategis</h4>
+        <p class="text-sm text-gray-500">Dekat kampus & kota</p>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow text-center">
+        <h4 class="font-semibold">Terpercaya</h4>
+        <p class="text-sm text-gray-500">Pemilik terverifikasi</p>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow text-center">
+        <h4 class="font-semibold">Cepat & Mudah</h4>
+        <p class="text-sm text-gray-500">Proses instan</p>
+    </div>
+</section>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @forelse($kosts ?? [] as $kost)
-        <div class="bg-white rounded-xl shadow hover:shadow-xl transition">
-            <img src="{{ $kost->foto ?? 'https://source.unsplash.com/400x300/?house' }}" 
-                 class="rounded-t-xl h-48 w-full object-cover">
-            <div class="p-4">
-                <h4 class="font-semibold">{{ $kost->nama }}</h4>
-                <p class="text-sm text-gray-500">{{ $kost->alamat }}</p>
-                <p class="font-bold text-blue-600 mt-2">
+<!-- LIST KOST -->
+<section class="px-10 py-2">
+
+    <h3 class="text-xl font-semibold mb-6">Pilihan Terpopuler</h3>
+
+    <!-- GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+    @forelse ($kosts as $kost)
+
+        @php
+            $fotos = $kost->fotos ?? collect();
+            $mainFoto = $fotos->where('is_primary', 1)->first()
+                        ?? $fotos->first();
+        @endphp
+
+        <!-- CARD -->
+        <div class="bg-white rounded-2xl shadow overflow-hidden">
+
+            <!-- IMAGE -->
+            <div class="relative">
+                @if($mainFoto)
+                    <img src="{{ asset('storage/' . $mainFoto->foto) }}"
+                        class="w-full h-36 object-cover">
+                @else
+                    <div class="w-full h-36 bg-gray-300 flex items-center justify-center">
+                        Tidak ada foto
+                    </div>
+                @endif
+            </div>
+
+            <!-- THUMB -->
+            <div class="flex gap-2 p-3 overflow-x-auto">
+                @foreach($fotos->take(4) as $i => $foto)
+                    <img src="{{ asset('storage/' . $foto->foto) }}"
+                        onclick="openGallery({{ $kost->id }}, {{ $i }})"
+                        class="w-12 h-8 object-cover rounded-lg cursor-pointer hover:opacity-80">
+                @endforeach
+            </div>
+
+            <!-- CONTENT -->
+            <div class="px-3 pb-3">
+
+                <!-- BADGE -->
+                <div class="flex gap-2 mb-2 text-xs">
+                    <span class="bg-black text-white px-2 py-1 rounded-full">Kost</span>
+                    <span class="bg-gray-200 px-2 py-1 rounded-full">
+                        {{ ucfirst($kost->gender ?? 'Putra') }}
+                    </span>
+                </div>
+
+                <!-- TITLE -->
+                <h3 class="text-lg font-semibold leading-tight">
+                    {{ Str::limit($kost->nama_kost, 25) }}
+                </h3>
+
+                <!-- ADDRESS -->
+                <p class="text-sm text-gray-500 mt-1">
+                    📍 {{ Str::limit($kost->alamat, 30) }}
+                </p>
+
+                <!-- FASILITAS -->
+                <div class="flex flex-wrap gap-2 mt-3 text-xs">
+                    @foreach($kost->fasilitas->take(3) as $f)
+                        <span class="bg-gray-100 px-2 py-1 rounded-full">
+                            {{ $f->nama }}
+                        </span>
+                    @endforeach
+
+                    @if($kost->fasilitas->count() > 3)
+                        <span class="bg-gray-100 px-2 py-1 rounded-full">
+                            +{{ $kost->fasilitas->count() - 3 }}
+                        </span>
+                    @endif
+                </div>
+
+                <!-- PRICE -->
+                <p class="mt-2 font-bold">
                     Rp {{ number_format($kost->harga) }}
+                    <span class="text-sm text-gray-400">/bulan</span>
                 </p>
-                <p class="text-xs mt-1">
-                    {{ ucfirst($kost->gender) }} • {{ $kost->ac ? 'AC' : 'Non AC' }}
-                </p>
+
             </div>
         </div>
-        @empty
-        <p class="col-span-3 text-center text-gray-500">
-            Belum ada data kost.
-        </p>
-        @endforelse
+
+    @empty
+        <p class="text-gray-500">Belum ada kost tersedia</p>
+    @endforelse
+
     </div>
+
+<!-- MODAL GALLERY -->
+<div id="galleryModal" class="fixed inset-0 bg-black/90 hidden z-50">
+
+    <button onclick="closeGallery()"
+        class="absolute top-5 right-6 text-white text-3xl">
+        ✕
+    </button>
+
+    <button onclick="prevImage()"
+        class="absolute left-6 top-1/2 -translate-y-1/2 text-white text-3xl">
+        ‹
+    </button>
+
+    <button onclick="nextImage()"
+        class="absolute right-6 top-1/2 -translate-y-1/2 text-white text-3xl">
+        ›
+    </button>
+
+    <div class="flex items-center justify-center h-full">
+        <img id="galleryImage"
+            class="max-h-[85vh] max-w-[90vw] object-contain">
+    </div>
+
 </div>
+</section>
 
-<!-- JS dropdown -->
+<!-- CTA -->
+<section class="bg-black text-white text-center py-12 mt-12">
+    <h3 class="text-xl font-semibold mb-2">
+        Punya Kost atau Kontrakan?
+    </h3>
+    <p class="text-gray-400 mb-4">
+        Pasang iklan properti Anda dan jangkau ribuan calon penyewa
+    </p>
+    <button class="bg-white text-black px-6 py-2 rounded">
+        Pasang Iklan Gratis
+    </button>
+</section>
+
 <script>
-document.getElementById('profileBtn')?.addEventListener('click', function () {
-    document.getElementById('profileMenu').classList.toggle('hidden');
-});
-</script>
+let galleries = @json($kosts->mapWithKeys(fn($k) => [$k->id => $k->fotos->pluck('foto')]));
+let currentIndex = 0;
+let currentKost = null;
 
+function openGallery(kostId, index) {
+    currentKost = kostId;
+    currentIndex = index;
+
+    document.getElementById('galleryModal').classList.remove('hidden');
+    showImage();
+}
+
+function closeGallery() {
+    document.getElementById('galleryModal').classList.add('hidden');
+}
+
+function showImage() {
+    let foto = galleries[currentKost][currentIndex];
+    document.getElementById('galleryImage').src = '/storage/' + foto;
+}
+
+function nextImage() {
+    if (currentIndex < galleries[currentKost].length - 1) {
+        currentIndex++;
+        showImage();
+    }
+}
+
+function prevImage() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        showImage();
+    }
+}
+</script>
 </body>
 </html>

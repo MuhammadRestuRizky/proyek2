@@ -1,76 +1,140 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\KostController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\PemilikController;
-
-// =====================
-// HALAMAN UTAMA (PUBLIC)
-// =====================
-
-// Homepage + Search + Filter
-Route::get('/', [KostController::class, 'index'])
-    ->name('home');
-
-// List semua kost
-Route::get('/kost', [KostController::class, 'index'])
-    ->name('kost.index');
-
-// Detail kost
-Route::get('/kost/{id}', [KostController::class, 'show'])
-    ->name('kost.detail');
-
-
-// =====================
-// DASHBOARD REDIRECT
-// =====================
-
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-
-    if (!$user) return redirect()->route('login');
-
-    return match ($user->role) {
-        'admin'   => redirect()->route('admin.dashboard'),
-        'pemilik' => redirect()->route('pemilik.dashboard'),
-        default   => redirect()->route('home'),
-    };
-})->middleware('auth');
-
-
-// =====================
-// PEMILIK
-// =====================
-
-Route::prefix('pemilik')
-    ->middleware(['auth', 'role:pemilik'])
-    ->name('pemilik.')
-    ->group(function () {
-
-        Route::get('/dashboard', [PemilikController::class, 'dashboard'])->name('dashboard');
-        Route::get('/kost/create', [PemilikController::class, 'create'])->name('kost.create');
-        Route::post('/kost', [PemilikController::class, 'store'])->name('kost.store');
-        Route::get('/kost/{id}/edit', [PemilikController::class, 'edit'])->name('kost.edit');
-        Route::put('/kost/{id}', [PemilikController::class, 'update'])->name('kost.update');
-        Route::patch('/kost/{id}/status', [PemilikController::class, 'updateStatus'])->name('kost.status');
-    });
-
-
-// =====================
-// ADMIN
-// =====================
-
-Route::prefix('admin')
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.')
-    ->group(function () {
-
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-        Route::get('/verifikasi', [AdminController::class, 'verifikasiUser'])->name('verifikasi');
-        Route::post('/verifikasi/{id}', [AdminController::class, 'approveUser'])->name('verifikasi.approve');
-        Route::get('/kost', [AdminController::class, 'kelolaKost'])->name('kost');
-        Route::patch('/kost/{id}/status', [AdminController::class, 'updateStatus'])->name('kost.status');
-    });
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PemilikProfileController;
 
 require __DIR__.'/auth.php';
+// =====================
+// REGISTER
+// =====================
+// pencari kost
+Route::get('/register', function () {
+    return view('auth.register_user');
+})->name('register');
+
+Route::post('/register', [AuthController::class, 'registerUser']);
+
+// pemilik kost
+Route::get('/register-pemilik', function () {
+    return view('auth.register_pemilik');
+});
+
+Route::post('/register-pemilik', [AuthController::class, 'registerPemilik']);
+
+
+// =====================
+// LOGIN (UI TERPISAH, BACKEND SAMA)
+// =====================
+// login pencari
+Route::get('/login', function () {
+    return view('auth.login_user');
+})->name('login');
+
+// login pemilik (UI saja beda)
+Route::get('/login-pemilik', function () {
+    return view('auth.login_pemilik');
+})->name('login.pemilik');
+
+
+// 🔥 LOGIN UNIVERSAL (INI YANG DIPAKAI)
+Route::post('/login', [AuthController::class, 'login']);
+
+
+// 🔥 LOGOUT
+Route::post('/logout', [AuthController::class, 'logout'])
+->middleware('auth')
+->name('logout');
+
+/*
+|------------------------------------------------------------------
+| PROFILE CUSTOMER
+|------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:costumer'])->group(function () {
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+});
+/*
+|------------------------------------------------------------------
+| PROFILE PEMILIK
+|------------------------------------------------------------------
+*/
+Route::prefix('pemilik')
+    ->middleware(['auth', 'role:pemilik'])
+    ->group(function () {
+
+        Route::get('/profile', [PemilikProfileController::class, 'edit'])->name('pemilik.profile.edit');
+        Route::patch('/profile', [PemilikProfileController::class, 'update'])->name('pemilik.profile.update');
+
+});
+/*
+|--------------------------------------------------------------------------
+| PUBLIC
+|--------------------------------------------------------------------------
+*/
+// homepage
+Route::get('/', [KostController::class, 'index'])->name('home');
+
+// pencarian (harus login)
+Route::get('/kost', [KostController::class, 'index'])
+    ->middleware('auth')->name('dashboard')
+    ->name('kost.index');
+
+// detail kost
+Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
+
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD
+|--------------------------------------------------------------------------
+*/
+// redirect otomatis
+Route::get('/dashboard', function () {
+
+    $user = auth()->user();
+
+    if (!$user) {
+        return redirect()->route('login');
+    }
+
+    if ($user->role == 'admin') {
+        return redirect('/admin/dashboard');
+    }
+
+    if ($user->role == 'pemilik') {
+        return redirect()->route('dashboard.pemilik');
+    }
+
+    if ($user->role == 'costumer') {
+        return redirect('/');
+    }
+    // fallback
+    return abort(403);
+
+})->middleware('auth');
+
+Route::delete('/pemilik/foto/{id}', [KostController::class, 'destroyFoto'])
+->name('pemilik.foto.destroy');
+
+// ==============================
+// DASHBOARD PEMILIK
+// ==============================
+Route::prefix('pemilik')
+    ->name('pemilik.')
+    ->middleware(['auth', 'role:pemilik'])
+    ->group(function () {
+
+    Route::get('/dashboard', [KostController::class, 'dashboardPemilik'])
+        ->name('dashboard');
+
+    Route::resource('kost', KostController::class);
+
+});

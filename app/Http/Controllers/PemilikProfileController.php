@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class ProfileController extends Controller
+class PemilikProfileController extends Controller
 {
     public function edit()
     {
-        return view('profile.edit');
+        return view('pemilik.profile.edit');
     }
 
     public function update(Request $request)
@@ -20,13 +20,11 @@ class ProfileController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'no_wa' => 'required',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'photo' => 'image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // Upload foto baru
         if ($request->hasFile('photo')) {
 
-            // Hapus foto lama
             if ($user->photo) {
                 Storage::disk('public')->delete($user->photo);
             }
@@ -41,6 +39,6 @@ class ProfileController extends Controller
             'no_wa' => $request->no_wa,
         ]);
 
-        return back()->with('success', 'Profil berhasil diperbarui!');
+        return back()->with('success', 'Profil pemilik berhasil diperbarui!');
     }
 }
