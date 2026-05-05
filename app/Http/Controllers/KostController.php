@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Kost;
+use App\Models\Booking;
 use App\Models\KostFoto;
 use App\Models\Fasilitas;
 use Illuminate\Support\Facades\Storage;
@@ -82,11 +83,49 @@ public function login(Request $request)
         return view('kost.show', compact('kost'));
     }
 
+
+    public function storeBooking(Request $request)
+    {
+
+// ✅ VALIDASI DI SINI (PALING ATAS)
+            $request->validate([
+                'nama' => 'required',
+                'no_telp' => 'required',
+                'tanggal_masuk' => 'required|date',
+                'durasi' => 'required|numeric|min:1',
+                'metode' => 'required'
+            ]);
+
+        $kost = Kost::findOrFail($request->kost_id);
+
+        $total = $kost->harga * $request->durasi;
+
+        $booking = Booking::create([
+            'user_id' => auth()->id(),
+            'kost_id' => $kost->id,
+            'nama' => $request->nama,
+            'no_telp' => $request->no_telp,
+            'tanggal_masuk' => $request->tanggal_masuk,
+            'durasi' => $request->durasi,
+            'metode' => $request->metode,
+            'total' => $total,
+            'status' => 'pending'
+        ]);
+        return redirect()->route('booking.show', $booking->id);
+    }
+
+    public function showBooking($id)
+    {
+        $booking = Booking::with(['kost.pemilik'])->findOrFail($id);
+
+        return view('booking.show', compact('booking'));
+    }
+
     // ✅ TAMBAHKAN DI SINI
     public function booking($id)
     {
         $kost = Kost::with(['fotos','fasilitas','pemilik'])->findOrFail($id);
-        return view('booking', compact('kost'));
+        return view('booking.index', compact('kost'));
     }
 
     // ✅ DASHBOARD PEMILIK

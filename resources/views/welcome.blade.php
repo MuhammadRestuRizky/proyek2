@@ -25,8 +25,8 @@
     @auth
     <div class="flex items-center gap-2 text-sm">
 
-        <a href="/riwayat"
-            class="px-3 py-1 rounded-md {{ request()->is('riwayat') ? 'bg-gray-700' : 'hover:bg-gray-800' }}">
+        <a href="/transaksi"
+            class="px-3 py-1 rounded-md {{ request()->is('transaksi') ? 'bg-gray-700' : 'hover:bg-gray-800' }}">
             📋 Transaksi
         </a>
 

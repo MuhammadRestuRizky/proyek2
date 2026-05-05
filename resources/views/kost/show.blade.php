@@ -110,14 +110,19 @@
                 <span class="text-sm text-gray-400">/bulan</span>
             </p>
 
-            <!-- TAB -->
-            <div class="bg-gray-200 rounded-full flex text-sm p-1 w-[280px]">
-                <div class="w-1/2 bg-white text-center py-1 rounded-full font-medium">
+            <div class="bg-gray-200 rounded-full flex text-sm p-1 w-[260px]">
+
+                <!-- INFORMASI (aktif) -->
+                <div class="w-1/2 text-center py-1 text-gray-500">
                     Informasi
                 </div>
-                <div class="w-1/2 text-center py-1 text-gray-500">
+
+                <!-- BOOKING -->
+                <a href="{{ route('booking.create', $kost->id) }}"
+                    class="w-1/2 bg-white text-center py-1 rounded-full font-medium">
                     Booking
-                </div>
+                </a>
+
             </div>
 
             <!-- DESKRIPSI -->
