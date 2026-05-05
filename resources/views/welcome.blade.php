@@ -149,7 +149,9 @@
         @endphp
 
         <!-- CARD -->
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
+
+        <a href="{{ route('kost.detail', $kost->id) }}" 
+        class="bg-white rounded-2xl shadow overflow-hidden hover:shadow-xl hover:scale-[1.02] transition">
 
             <!-- IMAGE -->
             <div class="relative">
@@ -215,7 +217,7 @@
                 </p>
 
             </div>
-        </div>
+        </a>
 
     @empty
         <p class="text-gray-500">Belum ada kost tersedia</p>
@@ -245,6 +247,7 @@
         <img id="galleryImage"
             class="max-h-[85vh] max-w-[90vw] object-contain">
     </div>
+
 
 </div>
 </section>

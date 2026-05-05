@@ -52,13 +52,15 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 /*
 |------------------------------------------------------------------
-| PROFILE CUSTOMER
+| router costumer
 |------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:costumer'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // detail kost
+    Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
 
 });
 /*
@@ -88,7 +90,7 @@ Route::get('/kost', [KostController::class, 'index'])
     ->name('kost.index');
 
 // detail kost
-Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
+// Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
 
 
 /*

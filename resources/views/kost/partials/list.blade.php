@@ -1,10 +1,11 @@
 @forelse($kosts as $kost)
 
-<div class="bg-white rounded-xl shadow hover:shadow-xl transition overflow-hidden">
+<a href="{{ route('kost.detail', $kost->id) }}"
+   class="block bg-white rounded-xl shadow hover:shadow-xl hover:scale-[1.02] transition overflow-hidden">
 
     <!-- FOTO -->
     <img 
-        src="{{ $kost->foto ?? 'https://source.unsplash.com/400x300/?room' }}"
+        src="{{ $kost->foto ? asset('storage/'.$kost->foto) : 'https://source.unsplash.com/400x300/?room' }}"
         class="h-48 w-full object-cover">
 
     <div class="p-4">
@@ -21,12 +22,12 @@
         </div>
 
         <!-- NAMA -->
-        <h4 class="font-semibold text-lg">
+        <h4 class="font-semibold text-lg leading-tight">
             {{ $kost->nama }}
         </h4>
 
         <!-- ALAMAT -->
-        <p class="text-sm text-gray-500">
+        <p class="text-sm text-gray-500 line-clamp-2">
             {{ $kost->alamat }}
         </p>
 
@@ -47,19 +48,19 @@
 
         <!-- HARGA -->
         <p class="font-bold text-blue-600 mt-3 text-lg">
-            Rp {{ number_format($kost->harga) }}
+            Rp {{ number_format($kost->harga, 0, ',', '.') }}
             <span class="text-sm text-gray-400">/bulan</span>
         </p>
 
         <!-- BUTTON DETAIL -->
-        <a href="{{ route('kost.detail', $kost->id) }}"
-            class="block mt-3 text-center bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
+        <div
+            class="mt-3 text-center bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
             Lihat Detail
-        </a>
+        </div>
 
     </div>
 
-</div>
+</a>
 
 @empty
 

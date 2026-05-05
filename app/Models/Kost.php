@@ -22,6 +22,12 @@ class Kost extends Model
         'maps'
     ];
 
+
+        public function pemilik()
+        {
+            return $this->belongsTo(User::class, 'user_id');
+        }
+
     // 🔥 RELASI FOTO
     public function fotos()
     {
@@ -33,4 +39,5 @@ class Kost extends Model
     {
         return $this->belongsToMany(Fasilitas::class, 'fasilitas_kost');
     }
+
 }
