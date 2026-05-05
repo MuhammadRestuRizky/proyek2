@@ -19,12 +19,12 @@
     <!-- TENGAH (MENU) -->
     <div class="flex gap-6 text-sm items-center">
         <a href="#" class="flex items-center gap-1 hover:text-gray-300">
-            📄 Riwayat
+            📄 Transaksi
         </a>
         <a href="#" class="flex items-center gap-1 hover:text-gray-300">
             🔍 Pencarian
         </a>
-        <a href="#" class="flex items-center gap-1 bg-gray-700 px-3 py-1 rounded-lg">
+        <a href="#" class="flex items-center gap-1 hover:text-gray-300">
             🏠 Beranda
         </a>
     </div>
@@ -40,13 +40,13 @@
 </div>
 
 <!-- TOMBOL KEMBALI -->
-<div class="px-6 py-3">
+<div class="px-2 py-1">
     <a href="{{ url()->previous() }}" class="text-gray-600 text-sm hover:underline">
         ← Kembali
     </a>
 </div>
 
-<div class="max-w-6xl mx-auto p-6">
+<div class="max-w-4xl mx-auto p-1">
 
     @php
         $fotos = $kost->fotos;
@@ -59,29 +59,32 @@
         <!-- ================= LEFT ================= -->
         <div class="col-span-2">
 
-            <!-- FOTO -->
-            <div class="grid grid-cols-3 gap-3 h-[240px] mb-4">
+           <!-- FOTO -->
+<div class="grid grid-cols-3 gap-3 mb-2">
 
-                <!-- FOTO BESAR -->
-                <div class="col-span-2 h-full">
-                    <img id="mainImage"
-                        src="{{ asset('storage/' . $mainFoto->foto) }}"
-                        class="w-full h-full object-cover rounded-2xl">
-                </div>
+    <!-- FOTO BESAR -->
+    <div class="col-span-2 aspect-[4/3]">
+        <img id="mainImage"
+            src="{{ asset('storage/' . $mainFoto->foto) }}"
+            onclick="openModal(this.src)"
+            class="w-full h-full object-cover rounded-2xl">
+    </div>
 
-                <!-- FOTO KANAN -->
-                <div class="flex flex-col gap-2 h-full">
-                    @foreach($fotos->skip(1)->take(3) as $foto)
-                        <img src="{{ asset('storage/' . $foto->foto) }}"
-                            onclick="changeImage(this)"
-                            class="w-full flex-1 object-cover rounded-xl cursor-pointer hover:opacity-80 transition">
-                    @endforeach
-                </div>
-
+    <!-- FOTO KANAN -->
+    <div class="grid grid-cols-2 grid-rows-2 grid-flow-col gap-2 h-full">
+        @foreach($fotos->skip(1)->take(4) as $foto)
+            <div class="aspect-square">
+                <img src="{{ asset('storage/' . $foto->foto) }}"
+                    onclick="changeImage(this); openModal(this.src)"
+                    class="w-full h-full object-cover rounded-xl cursor-pointer hover:opacity-80 transition">
             </div>
+        @endforeach
+    </div>
+
+</div>
 
             <!-- BADGE -->
-            <div class="flex gap-2 text-xs">
+            <div class="flex gap-2 text-xs mt-1">
                 <span class="bg-black text-white px-2 py-1 rounded-full">Kost</span>
                 <span class="bg-gray-200 px-2 py-1 rounded-full">
                     {{ ucfirst($kost->gender ?? 'Putra') }}
@@ -92,23 +95,23 @@
             </div>
 
             <!-- TITLE -->
-            <h1 class="text-2xl font-bold mt-2">
+            <h1 class="text-2xl font-bold">
                 {{ $kost->nama_kost }}
             </h1>
 
             <!-- ALAMAT -->
-            <p class="text-gray-500 text-sm mt-1">
+            <p class="text-gray-500 text-sm">
                 📍 {{ $kost->alamat }}
             </p>
 
             <!-- HARGA -->
-            <p class="text-xl font-bold mt-2">
+            <p class="text-xl font-bold">
                 Rp {{ number_format($kost->harga,0,',','.') }}
                 <span class="text-sm text-gray-400">/bulan</span>
             </p>
 
             <!-- TAB -->
-            <div class="mt-4 bg-gray-200 rounded-full flex text-sm p-1 w-[280px]">
+            <div class="bg-gray-200 rounded-full flex text-sm p-1 w-[280px]">
                 <div class="w-1/2 bg-white text-center py-1 rounded-full font-medium">
                     Informasi
                 </div>
@@ -118,7 +121,7 @@
             </div>
 
             <!-- DESKRIPSI -->
-            <div class="bg-white rounded-2xl p-4 mt-4 border">
+            <div class="bg-white rounded-2xl p-2">
                 <h3 class="font-semibold mb-2">Deskripsi</h3>
                 <p class="text-sm text-gray-600">
                     {{ $kost->deskripsi }}
@@ -126,8 +129,8 @@
             </div>
 
             <!-- FASILITAS -->
-            <div class="bg-white rounded-2xl p-4 mt-4 border">
-                <h3 class="font-semibold mb-3">Fasilitas</h3>
+            <div class="bg-white rounded-2xl p-2 mt-2 border">
+                <h3 class="font-semibold mb-1">Fasilitas</h3>
 
                 <div class="grid grid-cols-2 gap-2 text-sm">
                     @foreach($kost->fasilitas as $f)
@@ -144,12 +147,6 @@
         <!-- ================= RIGHT ================= -->
         <div class="space-y-4">
 
-            <!-- BOOKING -->
-            <div class="bg-white p-4 rounded-2xl border">
-                <button class="w-full bg-[#0B0F1A] text-white py-2 rounded-lg">
-                    Booking Sekarang
-                </button>
-            </div>
 
             <!-- PEMILIK -->
             <div class="bg-white p-4 rounded-2xl border">
@@ -197,24 +194,56 @@
             </div>
             @endif
 
+             <!-- BOOKING -->
+            <a href="{{ route('booking.create', $kost->id) }}"
+                class="block text-center bg-[#0B0F1A] text-white py-2 rounded-lg">
+                Booking Sekarang
+            </a>
+            
         </div>
 
     </div>
 </div>
 
-<!-- SCRIPT SLIDER -->
+<!-- SCRIPT -->
 <script>
 function changeImage(el) {
     const main = document.getElementById('mainImage');
     main.src = el.src;
 
-    // efek smooth (opsional)
     main.classList.add('scale-95');
     setTimeout(() => {
         main.classList.remove('scale-95');
     }, 150);
 }
+
+function openModal(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modalImg.src = src;
+}
+
+function closeModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+document.getElementById('imageModal').addEventListener('click', function(e) {
+    if (e.target.id === 'imageModal') {
+        closeModal();
+    }
+});
 </script>
+
+<!-- MODAL -->
+<div id="imageModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
+    <span onclick="closeModal()" class="absolute top-5 right-8 text-white text-3xl cursor-pointer">&times;</span>
+    <img id="modalImage" class="max-w-[90%] max-h-[90%] rounded-xl shadow-lg">
+</div>
 
 </body>
 </html>

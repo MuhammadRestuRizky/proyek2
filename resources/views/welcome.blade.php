@@ -27,7 +27,7 @@
 
         <a href="/riwayat"
             class="px-3 py-1 rounded-md {{ request()->is('riwayat') ? 'bg-gray-700' : 'hover:bg-gray-800' }}">
-            📋 Riwayat
+            📋 Transaksi
         </a>
 
         <a href="/kost"

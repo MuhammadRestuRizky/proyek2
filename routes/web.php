@@ -61,7 +61,8 @@ Route::middleware(['auth', 'role:costumer'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // detail kost
     Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
-
+    Route::get('/booking/{id}', [KostController::class, 'booking'])->name('booking.create');
+    Route::post('/booking', [KostController::class, 'storeBooking'])->name('booking.store');
 });
 /*
 |------------------------------------------------------------------

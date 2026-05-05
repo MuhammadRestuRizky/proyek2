@@ -82,6 +82,13 @@ public function login(Request $request)
         return view('kost.show', compact('kost'));
     }
 
+    // ✅ TAMBAHKAN DI SINI
+    public function booking($id)
+    {
+        $kost = Kost::with(['fotos','fasilitas','pemilik'])->findOrFail($id);
+        return view('booking', compact('kost'));
+    }
+
     // ✅ DASHBOARD PEMILIK
     public function dashboardPemilik()
     {
@@ -103,6 +110,8 @@ public function login(Request $request)
         $fasilitas = Fasilitas::all(); // 🔥 ambil dari DB
         return view('pemilik.create', compact('fasilitas'));
     }
+
+    
 
     // SIMPAN DATA
     public function store(Request $request)
