@@ -161,17 +161,37 @@
             <div class="space-y-2 mt-2 text-sm">
                 <label class="block border p-2 rounded-xl">
                     <input type="radio" name="metode" value="bank" checked>
-                    Transfer Bank
+                    M-Bangking
                 </label>
 
                 <label class="block border p-2 rounded-xl">
                     <input type="radio" name="metode" value="ewallet">
-                    E-Wallet
+                    Dana
                 </label>
 
                 <label class="block border p-2 rounded-xl">
                     <input type="radio" name="metode" value="cash">
-                    Tunai
+                    Shopeepay
+                </label>
+
+                <label class="block border p-2 rounded-xl">
+                    <input type="radio" name="metode" value="cash">
+                    Gopay
+                </label>
+
+                <label class="block border p-2 rounded-xl">
+                    <input type="radio" name="metode" value="cash">
+                    OVO
+                </label>
+
+                <label class="block border p-2 rounded-xl">
+                    <input type="radio" name="metode" value="cash">
+                    Rekening BCA
+                </label>
+
+                <label class="block border p-2 rounded-xl">
+                    <input type="radio" name="metode" value="cash">
+                    Rekening Mandiri
                 </label>
             </div>
         </div>

@@ -15,9 +15,10 @@
         <h1 class="text-lg font-bold">KostKu</h1>
 
         @guest
-            <span class="bg-gray-700 text-xs px-2 py-1 rounded">
+            <a href="{{ route('login.admin') }}"
+            class="bg-black text-white px-3 py-1 rounded text-xs hover:bg-gray-800">
                 Admin
-            </span>
+            </a>
         @endguest
     </div>
 

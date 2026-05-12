@@ -40,6 +40,10 @@ Route::get('/login-pemilik', function () {
     return view('auth.login_pemilik');
 })->name('login.pemilik');
 
+Route::get('/login-admin', function () {
+    return view('auth.login_admin');
+})->name('login.admin');
+
 
 // 🔥 LOGIN UNIVERSAL (INI YANG DIPAKAI)
 Route::post('/login', [AuthController::class, 'login']);
@@ -142,3 +146,8 @@ Route::prefix('pemilik')
     Route::resource('kost', KostController::class);
 
 });
+
+// halaman dashboard admin
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+})->middleware('auth')->name('admin.dashboard');
