@@ -56,6 +56,7 @@ class AuthController extends Controller
             'no_wa' => $request->no_wa,
             'password' => Hash::make($request->password),
             'role' => 'pemilik',
+            'status_akun' => 'pending',
             'ktp' => $ktpPath,
             'dokumen' => $dokumenPath,
         ]);

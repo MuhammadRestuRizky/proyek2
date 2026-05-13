@@ -147,7 +147,19 @@ Route::prefix('pemilik')
 
 });
 
-// halaman dashboard admin
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware('auth')->name('admin.dashboard');
+// ======================
+// ADMIN
+// ======================
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
+        ->name('admin.dashboard');
+
+    Route::post('/admin/aktifkan/{id}', [AdminController::class, 'aktifkan'])
+        ->name('admin.aktifkan');
+
+    Route::post('/admin/tolak/{id}', [AdminController::class, 'tolak'])
+        ->name('admin.tolak');
+
+});
