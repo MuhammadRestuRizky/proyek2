@@ -25,7 +25,10 @@ class Booking extends Model
     {
         return $this->belongsTo(Kost::class);
     }
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     // 🔥 relasi langsung ke pemilik lewat kost
     public function pemilik()
     {

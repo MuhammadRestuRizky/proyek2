@@ -61,7 +61,10 @@ class AuthController extends Controller
             'dokumen' => $dokumenPath,
         ]);
 
-        return redirect('/login')->with('success', 'Akun Pemilik Kost Berhasil Dibuat');
+        return redirect('/login')->with(
+            'success',
+            'Akun Pemilik Kost berhasil dibuat dan menunggu persetujuan admin'
+        );
     }
 
     // =====================
@@ -80,16 +83,48 @@ class AuthController extends Controller
 
             $user = Auth::user();
 
-            // 🔥 ROLE BASED REDIRECT
+            // =========================
+            // PEMILIK KOST
+            // =========================
             if ($user->role === 'pemilik') {
-                return redirect()->route('pemilik.dashboard');
+
+                // akun masih pending
+                if ($user->status_akun === 'pending') {
+
+                    Auth::logout();
+
+                    return back()->withErrors([
+                        'email' => 'Akun Anda masih menunggu persetujuan admin.'
+                    ]);
+                }
+
+                // akun ditolak
+                if ($user->status_akun === 'ditolak') {
+
+                    Auth::logout();
+
+                    return back()->withErrors([
+                        'email' => 'Akun Anda ditolak oleh admin.'
+                    ]);
+                }
+
+                // akun aktif
+                if ($user->status_akun === 'aktif') {
+                    return redirect()->route('pemilik.dashboard');
+                }
             }
 
+            // =========================
+            // ADMIN
+            // =========================
             if ($user->role === 'admin') {
                 return redirect('/admin/dashboard');
             }
 
-            return redirect('/'); // costumer
+            // =========================
+            // COSTUMER
+            // =========================
+            return redirect('/');
         }
 
         return back()->withErrors([

@@ -283,6 +283,11 @@
         <div class="menu">
 
             <a href="#">
+                <div class="icon">Ad</div>
+                Kelola Iklan
+            </a>
+
+            <a href="#">
                 <div class="icon">👤</div>
                 Kelola Akun Pemilik Properti
             </a>
@@ -291,12 +296,6 @@
                 <div class="icon">👤</div>
                 Kelola Akun Pencari Kost
             </a>
-
-            <a href="#">
-                <div class="icon">Ad</div>
-                Kelola Iklan
-            </a>
-
         </div>
 
     </div>
@@ -320,6 +319,18 @@
 
         <!-- CONTENT -->
         <div class="content">
+        @if(session('success'))
+            <div style="
+                background:#d4edda;
+                color:#155724;
+                padding:15px;
+                border-radius:10px;
+                margin-bottom:20px;
+                font-weight:bold;
+            ">
+                {{ session('success') }}
+            </div>
+        @endif
 
             <!-- TITLE -->
             <div class="title">

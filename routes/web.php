@@ -68,6 +68,8 @@ Route::middleware(['auth', 'role:costumer'])->group(function () {
     Route::get('/booking/{id}', [KostController::class, 'booking'])->name('booking.create');
     Route::post('/booking', [KostController::class, 'storeBooking'])->name('booking.store');
     Route::get('/booking/detail/{id}', [KostController::class, 'showBooking'])->name('booking.show');
+    Route::post('/booking/upload/{id}', [KostController::class, 'uploadBukti'])->name('booking.upload');
+    Route::get('/booking/struk/{id}',[KostController::class, 'downloadStruk'])->name('booking.struk');        
 });
 /*
 |------------------------------------------------------------------
@@ -142,6 +144,15 @@ Route::prefix('pemilik')
 
     Route::get('/dashboard', [KostController::class, 'dashboardPemilik'])
         ->name('dashboard');
+
+    // PESANAN MASUK
+    Route::get('/pesanan', [KostController::class, 'pesanan'])
+        ->name('pesanan');
+
+    // SETUJUI PEMBAYARAN
+    Route::post('/booking/setujui/{id}',
+        [KostController::class, 'setujuiPembayaran'])
+        ->name('booking.setujui');
 
     Route::resource('kost', KostController::class);
 

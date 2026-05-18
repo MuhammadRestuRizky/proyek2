@@ -298,5 +298,79 @@ public function login(Request $request)
             'success' => true
         ]);
         }
+        public function uploadBukti(Request $request, $id)
+        {
+            $request->validate([
+                'bukti_pembayaran' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+            ]);
+
+            $booking = Booking::findOrFail($id);
+
+            // upload gambar
+            $path = $request->file('bukti_pembayaran')
+                            ->store('bukti_pembayaran', 'public');
+
+            // simpan ke database
+            $booking->bukti_pembayaran = $path;
+            $booking->status = 'menunggu';
+
+            $booking->save();
+
+            return back()->with(
+                'success',
+                'Bukti pembayaran berhasil diupload'
+            );
+        }
+
+        public function downloadStruk($id)
+        {
+            $booking = \App\Models\Booking::findOrFail($id);
+
+            return view('booking.struk', compact('booking'));
+        }
+
+        public function setujuiPembayaran($id)
+        {
+            $booking = \App\Models\Booking::findOrFail($id);
+
+            $booking->status = 'disetujui';
+            $booking->status_pembayaran = 'lunas';
+            $booking->save();
+
+            return back()->with(
+                'success', 'Pembayaran berhasil disetujui');
+        }
+        public function pesananMasuk()
+        {
+            $bookings = \App\Models\Booking::with([
+                'kost',
+                'kost.fotos',
+                'kost.pemilik'
+            ])
+            ->latest()
+            ->get();
+
+            return view('pemilik.pesanan', compact('bookings'));
+        }
+
+        public function pesanan()
+        {
+            $bookings = Booking::with([
+                    'kost',
+                    'kost.fotos',
+                    'user'
+                ])
+                ->whereHas('kost', function ($q) {
+
+                    // kost milik pemilik login
+                    $q->where('user_id', auth()->id());
+
+                })
+                ->whereNotNull('bukti_pembayaran')
+                ->latest()
+                ->get();
+
+            return view('pemilik.pesanan', compact('bookings'));
+        }
 
 }

@@ -26,6 +26,19 @@
         </span>
     </div>
 
+    <!-- NOTIF -->
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-2xl text-sm font-medium">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm font-medium">
+            {{ $errors->first() }}
+        </div>
+    @endif
+
 
     <!-- INFORMASI KOST -->
     <div class="bg-white p-4 rounded-2xl border">
@@ -45,14 +58,17 @@
                     <p class="font-semibold text-base">
                         {{ $booking->kost->nama_kost }}
                     </p>
+
                     <p class="text-gray-400 text-xs">
                         {{ $booking->kost->alamat }}
                     </p>
                 </div>
 
                 <div class="flex justify-between mt-2 text-xs text-gray-600">
+
                     <div>
                         <p class="text-gray-400">Tanggal Masuk</p>
+
                         <p>
                             {{ \Carbon\Carbon::parse($booking->tanggal_masuk)->translatedFormat('d M Y') }}
                         </p>
@@ -62,6 +78,7 @@
                         <p class="text-gray-400">Durasi</p>
                         <p>{{ $booking->durasi }} bulan</p>
                     </div>
+
                 </div>
             </div>
 
@@ -71,12 +88,16 @@
 
     <!-- RINCIAN PEMBAYARAN -->
     <div class="bg-white p-4 rounded-2xl border">
-        <h3 class="font-semibold mb-3">Rincian Pembayaran</h3>
+
+        <h3 class="font-semibold mb-3">
+            Rincian Pembayaran
+        </h3>
 
         <div class="text-sm space-y-2">
 
             <div class="flex justify-between">
                 <span class="text-gray-500">Metode</span>
+
                 <span class="font-medium">
                     {{ ucfirst($booking->metode) }}
                 </span>
@@ -84,6 +105,7 @@
 
             <div class="flex justify-between">
                 <span class="text-gray-500">Tanggal</span>
+
                 <span>
                     {{ $booking->created_at->translatedFormat('d M Y') }}
                 </span>
@@ -93,6 +115,7 @@
 
             <div class="flex justify-between">
                 <span>Harga / bulan</span>
+
                 <span>
                     Rp {{ number_format($booking->kost->harga,0,',','.') }}
                 </span>
@@ -105,22 +128,91 @@
 
             <div class="flex justify-between text-base font-bold mt-2">
                 <span>Total</span>
+
                 <span>
                     Rp {{ number_format($booking->total,0,',','.') }}
                 </span>
             </div>
         </div>
 
-        <!-- BUTTON -->
-        <button class="w-full mt-4 bg-black text-white py-2.5 rounded-xl font-medium hover:opacity-90 transition">
-            Upload Bukti Pembayaran
-        </button>
-    </div>
+        <!-- ACTION -->
+<div class="mt-4 space-y-3">
 
+    {{-- JIKA SUDAH DISETUJUI --}}
+    @if($booking->status == 'disetujui')
+
+        <!-- DOWNLOAD STRUK -->
+        <a href="{{ route('booking.struk', $booking->id) }}"
+           class="w-full border flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
+
+            ⬇️ Unduh Struk Transaksi
+        </a>
+
+        <!-- WHATSAPP -->
+        <a href="https://wa.me/{{ $booking->kost->pemilik->no_wa }}?text=Halo%20saya%20ingin%20menghubungi%20pemilik%20kost"
+           target="_blank"
+           class="w-full bg-black text-white py-3 rounded-xl text-sm font-medium flex justify-center items-center hover:opacity-90 transition">
+
+            Kontak Pemilik Kost
+        </a>
+
+    @else
+
+        <!-- FORM UPLOAD -->
+        <form action="{{ route('booking.upload', $booking->id) }}"
+              method="POST"
+              enctype="multipart/form-data">
+
+            @csrf
+
+            <label class="block text-sm font-medium mb-2">
+                Upload Bukti Pembayaran
+            </label>
+
+            <input type="file"
+                   name="bukti_pembayaran"
+                   required
+                   class="w-full border border-gray-300 rounded-xl p-3 text-sm file:mr-3 file:border-0 file:bg-black file:text-white file:px-4 file:py-2 file:rounded-lg file:cursor-pointer">
+
+            <button type="submit"
+                    class="w-full mt-4 bg-black text-white py-3 rounded-xl font-medium hover:opacity-90 transition">
+
+                Upload Bukti Pembayaran
+
+            </button>
+
+        </form>
+
+        <!-- PREVIEW -->
+        @if($booking->bukti_pembayaran)
+
+            <div class="mt-5">
+
+                <p class="text-sm font-semibold mb-2">
+                    Bukti Pembayaran
+                </p>
+
+                <img src="{{ asset('storage/' . $booking->bukti_pembayaran) }}"
+                     class="w-full max-w-sm rounded-2xl border">
+
+                <div class="mt-3 inline-block px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+                    Menunggu Verifikasi Pemilik Kost
+                </div>
+
+            </div>
+
+        @endif
+
+    @endif
+
+</div>
 
     <!-- INFORMASI PENYEWA -->
     <div class="bg-white p-4 rounded-2xl border">
-        <h3 class="font-semibold mb-3">Informasi Penyewa</h3>
+
+        <h3 class="font-semibold mb-3">
+            Informasi Penyewa
+        </h3>
 
         <div class="grid grid-cols-2 gap-4 text-sm">
 
@@ -136,6 +228,7 @@
 
             <div>
                 <p class="text-gray-400 text-xs">Pemilik</p>
+
                 <p class="font-medium">
                     {{ $booking->kost->pemilik->name ?? '-' }}
                 </p>

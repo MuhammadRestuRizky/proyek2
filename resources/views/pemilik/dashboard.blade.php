@@ -91,13 +91,16 @@
                 <div class="font-medium text-lg">Pasang Iklan</div>
             </a>
 
-        <div class="flex items-center gap-4 hover:translate-x-1 transition">
+        <a href="{{ route('pemilik.pesanan') }}"
+            class="flex items-center gap-4 hover:translate-x-1 transition">
+
             <div class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center">
                 📦
             </div>
-            <span class="font-medium text-lg">Pesanan</span>
-        </div>
-
+            <span class="font-medium text-lg">
+                Pesanan
+            </span>
+        </a>
     </div>
 
 </div>

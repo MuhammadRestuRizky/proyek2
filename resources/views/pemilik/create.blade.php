@@ -24,35 +24,63 @@
 <form action="{{ route('pemilik.kost.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
-<div class="grid grid-cols-3 gap-6">
+<div class="grid grid-cols-12 gap-6">
 
 <!-- LEFT -->
-<div class="col-span-2 space-y-4">
+<div class="col-span-9 space-y-5">
 
-<!-- FOTO -->
-<div class="bg-white p-4 rounded-xl shadow">
+    <!-- FOTO -->
+<div class="bg-white rounded-2xl border p-4">
 
-    <h3 class="font-semibold mb-3">Foto Kost</h3>
+    <h3 class="font-bold text-xl mb-4">
+        Foto Kost / Kontrakan :
+    </h3>
 
-    <!-- INPUT PILIH FOTO -->
     <input type="hidden" name="primary_index" id="primary_index">
 
-    <input 
-        type="file" 
-        id="foto" 
+    <input
+        type="file"
+        id="foto"
         accept="image/*"
-        class="w-full border p-2 rounded"
+        class="hidden"
     >
 
-    <!-- INFO -->
-    <p class="text-sm text-gray-500 mt-2">
-        Klik berkali-kali untuk menambah foto
-    </p>
+    <div class="grid grid-cols-12 gap-4">
 
-    <!-- PREVIEW -->
-    <div id="preview-container" class="grid grid-cols-3 gap-2 mt-3"></div>
+        <!-- FOTO BESAR -->
+        <div class="col-span-9">
 
-    <!-- TEMPAT SIMPAN FILE -->
+            <div id="main-preview"
+                 class="w-full h-[420px] rounded-2xl bg-gray-200 overflow-hidden flex items-center justify-center">
+
+                <span class="text-gray-400">
+                    Belum ada foto
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- THUMBNAIL -->
+        <div class="col-span-3">
+
+            <div id="preview-container"
+                 class="space-y-3">
+            </div>
+
+            <!-- BUTTON TAMBAH -->
+            <button type="button"
+                    onclick="document.getElementById('foto').click()"
+                    class="w-full h-32 border-2 border-dashed rounded-2xl flex items-center justify-center text-6xl text-gray-400 hover:bg-gray-100 transition">
+
+                +
+
+            </button>
+
+        </div>
+
+    </div>
+
     <div id="hidden-inputs"></div>
 
 </div>
@@ -100,90 +128,204 @@
 </div>
 
 <!-- RIGHT -->
-<div class="space-y-4">
+<div class="col-span-3">
 
-    <!-- NAMA -->
-    <div class="bg-white p-4 rounded-xl shadow">
-        <label class="font-semibold">Nama Kost</label>
-        <input type="text" name="nama_kost" class="w-full border p-2 mt-2 rounded" required>
-    </div>
+    <div class="space-y-4 sticky top-5">
 
-    <!-- TIPE -->
-    <div class="bg-white p-4 rounded-xl shadow">
-        <label class="font-semibold">Tipe</label>
-        <select name="tipe" class="w-full border p-2 rounded mt-2">
-            <option value="kost">Kost</option>
-            <option value="kontrakan">Kontrakan</option>
-        </select>
-    </div>
+        <!-- NAMA KOST -->
+        <div class="bg-white border rounded-1xl p-2 shadow-sm">
 
-    <!-- GENDER -->
-    <div class="bg-white p-4 rounded-xl shadow">
-        <label class="font-semibold">Untuk</label>
-        <select name="gender" class="w-full border p-2 rounded mt-2">
-            <option value="putra">Putra</option>
-            <option value="putri">Putri</option>
-            <option value="campur">Campur</option>
-        </select>
-    </div>
+            <h3 class="font-bold text-lg mb-1">
+                Nama Kost / Kontrakan
+            </h3>
 
-    <!-- KAMAR MANDI -->
-    <div class="bg-white p-4 rounded-xl shadow">
-        <label class="font-semibold">Kamar Mandi</label>
-        <select name="kamar_mandi" class="w-full border p-2 rounded mt-2">
-            <option value="Dalam">Dalam</option>
-            <option value="Luar">Luar</option>
-        </select>
-    </div>
-
-    <!-- FASILITAS -->
-    <div class="bg-white p-4 rounded-xl shadow">
-        <label class="font-semibold">Fasilitas</label>
-
-        <div class="grid grid-cols-2 gap-2 mt-2 text-sm">
-
-            <label class="flex items-center gap-2">
-                <input type="checkbox" name="fasilitas[]" value="1"> WiFi
-            </label>
-
-            <label class="flex items-center gap-2">
-                <input type="checkbox" name="fasilitas[]" value="2"> AC
-            </label>
-
-            <label class="flex items-center gap-2">
-                <input type="checkbox" name="fasilitas[]" value="3"> KM Dalam
-            </label>
-
-            <label class="flex items-center gap-2">
-                <input type="checkbox" name="fasilitas[]" value="4"> Parkir
-            </label>
+            <input type="text"
+                   name="nama_kost"
+                   placeholder="Masukkan nama kost"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
+                   required>
 
         </div>
+
+
+        <!-- TIPE PROPERTI -->
+        <div class="bg-white border rounded-1xl p-2 shadow-sm">
+
+            <h3 class="font-bold text-lg mb-1">
+                Tipe Properti
+            </h3>
+
+            <div class="space-y-3 text-sm">
+
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="radio"
+                           name="tipe"
+                           value="kost"
+                           checked>
+
+                    Kost
+                </label>
+
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="radio"
+                           name="tipe"
+                           value="kontrakan">
+
+                    Kontrakan
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- UNTUK -->
+        <div class="bg-white border rounded-1xl p-2 shadow-sm">
+
+            <h3 class="font-bold text-lg mb-1">
+                Untuk
+            </h3>
+
+            <div class="space-y-3 text-sm">
+
+                <label class="flex items-center gap-3">
+                    <input type="radio"
+                           name="gender"
+                           value="putra">
+
+                    Putra
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="radio"
+                           name="gender"
+                           value="putri">
+
+                    Putri
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="radio"
+                           name="gender"
+                           value="campur">
+
+                    Campur
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- KAMAR MANDI -->
+        <div class="bg-white border rounded-1xl p-3 shadow-sm">
+
+            <h3 class="font-bold text-lg mb-1">
+                Kamar Mandi
+            </h3>
+
+            <div class="space-y-3 text-sm">
+
+                <label class="flex items-center gap-3">
+                    <input type="radio"
+                           name="kamar_mandi"
+                           value="Dalam">
+
+                    Dalam
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="radio"
+                           name="kamar_mandi"
+                           value="Luar">
+
+                    Luar
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- FASILITAS -->
+        <div class="bg-white border rounded-1xl p-3 shadow-sm">
+
+            <h3 class="font-bold text-lg mb-1">
+                Fasilitas
+            </h3>
+
+            <div class="space-y-3 text-sm">
+
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="fasilitas[]" value="1">
+                    WiFi
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="fasilitas[]" value="2">
+                    AC
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="fasilitas[]" value="3">
+                    Kamar Mandi Dalam
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="fasilitas[]" value="4">
+                    Parkir Motor
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="fasilitas[]" value="5">
+                    Parkir Mobil
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="fasilitas[]" value="6">
+                    Dapur
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="fasilitas[]" value="7">
+                    Laundry
+                </label>
+
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="fasilitas[]" value="8">
+                    Security 24 Jam
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTON -->
+        <div class="flex gap-3 pt-2">
+
+            <button type="submit"
+                    class="flex-1 bg-black text-white py-3 rounded-xl font-medium hover:opacity-90 transition">
+
+                Terapkan
+
+            </button>
+
+            <a href="/pemilik/dashboard"
+               class="flex-1 bg-red-600 text-white py-3 rounded-xl font-medium text-center hover:bg-red-700 transition">
+
+                Hapus
+
+            </a>
+
+        </div>
+
     </div>
-
-</div>
-
-</div>
-
-<!-- BUTTON -->
-<div class="flex justify-end gap-4 mt-6">
-    <button class="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
-        Pasang 
-    </button>
-
-    <a href="/pemilik/dashboard"
-       class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700">
-        Hapus
-    </a>
-</div>
-
-</form>
 
 </div>
 
 <script>
 let selectedFiles = [];
-let primaryIndex = 0;
 
 document.getElementById('foto').addEventListener('change', function(e) {
 
@@ -192,65 +334,40 @@ document.getElementById('foto').addEventListener('change', function(e) {
 
     let container = document.getElementById('preview-container');
     let hiddenInputs = document.getElementById('hidden-inputs');
+    let mainPreview = document.getElementById('main-preview');
 
-    let index = selectedFiles.length;
-    selectedFiles.push(file);
+    let imageUrl = URL.createObjectURL(file);
 
-    let div = document.createElement('div');
-    div.classList.add('relative');
+    // FOTO UTAMA
+    if(selectedFiles.length === 0){
+        mainPreview.innerHTML = `
+            <img src="${imageUrl}"
+                 class="w-full h-full object-cover">
+        `;
+    }
 
-    let img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    img.classList.add('w-full', 'h-32', 'object-cover', 'rounded');
+    // THUMBNAIL
+    let thumb = document.createElement('div');
 
-    // tombol utama
-    let btnPrimary = document.createElement('button');
-    btnPrimary.innerHTML = "Utama";
-    btnPrimary.classList.add(
-        'absolute','bottom-1','left-1',
-        'bg-black','text-white','text-xs','px-2','rounded'
-    );
+    thumb.className =
+        'relative w-full h-28 rounded-xl overflow-hidden border cursor-pointer';
 
-    btnPrimary.onclick = function(e) {
-        e.preventDefault();
+    thumb.innerHTML = `
+        <img src="${imageUrl}"
+             class="w-full h-full object-cover">
+    `;
 
-        document.getElementById('primary_index').value = index;
+    thumb.onclick = function() {
 
-        document.querySelectorAll('.primary-label').forEach(el => el.remove());
-
-        let label = document.createElement('span');
-        label.innerHTML = "UTAMA";
-        label.classList.add(
-            'primary-label',
-            'absolute','top-1','left-1',
-            'bg-green-600','text-white','text-xs','px-2','rounded'
-        );
-
-        div.appendChild(label);
+        mainPreview.innerHTML = `
+            <img src="${imageUrl}"
+                 class="w-full h-full object-cover">
+        `;
     };
 
-    // tombol hapus
-    let btnDelete = document.createElement('button');
-    btnDelete.innerHTML = "×";
-    btnDelete.classList.add(
-        'absolute','top-1','right-1',
-        'bg-red-600','text-white',
-        'rounded-full','w-6','h-6'
-    );
+    container.appendChild(thumb);
 
-    btnDelete.onclick = function(e) {
-        e.preventDefault();
-        div.remove();
-        input.remove();
-    };
-
-    div.appendChild(img);
-    div.appendChild(btnPrimary);
-    div.appendChild(btnDelete);
-
-    container.appendChild(div);
-
-    // hidden input
+    // SIMPAN FILE
     let dt = new DataTransfer();
     dt.items.add(file);
 
@@ -261,7 +378,8 @@ document.getElementById('foto').addEventListener('change', function(e) {
 
     hiddenInputs.appendChild(input);
 
-    // reset input
+    selectedFiles.push(file);
+
     e.target.value = "";
 });
 </script>
