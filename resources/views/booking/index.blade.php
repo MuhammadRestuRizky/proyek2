@@ -155,46 +155,17 @@
         </div>
 
         <!-- METODE -->
-        <div class="mb-3">
-            <label class="text-xs">Metode Pembayaran</label>
+        <label class="block font-bold mb-2">Pilih Metode Pembayaran</label>
 
-            <div class="space-y-2 mt-2 text-sm">
-                <label class="block border p-2 rounded-xl">
-                    <input type="radio" name="metode" value="bank" checked>
-                    M-Bangking
-                </label>
+<select name="metode" class="w-full border rounded p-3" required>
 
-                <label class="block border p-2 rounded-xl">
-                    <input type="radio" name="metode" value="ewallet">
-                    Dana
-                </label>
+    @foreach($kost->pemilik->paymentMethods->where('is_active', true) as $payment)
+        <option value="{{ $payment->method_name }}">
+            {{ $payment->method_name }} - {{ $payment->account_number }}
+        </option>
+    @endforeach
 
-                <label class="block border p-2 rounded-xl">
-                    <input type="radio" name="metode" value="cash">
-                    Shopeepay
-                </label>
-
-                <label class="block border p-2 rounded-xl">
-                    <input type="radio" name="metode" value="cash">
-                    Gopay
-                </label>
-
-                <label class="block border p-2 rounded-xl">
-                    <input type="radio" name="metode" value="cash">
-                    OVO
-                </label>
-
-                <label class="block border p-2 rounded-xl">
-                    <input type="radio" name="metode" value="cash">
-                    Rekening BCA
-                </label>
-
-                <label class="block border p-2 rounded-xl">
-                    <input type="radio" name="metode" value="cash">
-                    Rekening Mandiri
-                </label>
-            </div>
-        </div>
+</select>
 
         <!-- TOTAL -->
         <div class="border-t pt-3 text-sm">

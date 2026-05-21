@@ -19,6 +19,7 @@ class Booking extends Model
         'total',
         'status'
     ];
+    
 
     // relasi ke kost
     public function kost()

@@ -87,21 +87,30 @@
 
 
     <!-- RINCIAN PEMBAYARAN -->
-    <div class="bg-white p-4 rounded-2xl border">
+    <h3 class="text-xl font-bold mt-6 mb-3">
+    Metode Pembayaran Pemilik Kost
+</h3>
 
-        <h3 class="font-semibold mb-3">
-            Rincian Pembayaran
-        </h3>
+@forelse($booking->kost->pemilik->paymentMethods->where('is_active', true) as $payment)
 
-        <div class="text-sm space-y-2">
+<div class="border rounded-lg p-4 mb-3 bg-gray-50">
 
-            <div class="flex justify-between">
-                <span class="text-gray-500">Metode</span>
+    <div class="font-bold text-lg">
+        {{ $payment->method_name }}
+    </div>
 
-                <span class="font-medium">
-                    {{ ucfirst($booking->metode) }}
-                </span>
-            </div>
+    <div class="text-gray-700">
+        Nomor: {{ $payment->account_number }}
+    </div>
+
+</div>
+
+@empty
+
+<div class="text-red-500">
+    Pemilik kost belum menambahkan metode pembayaran
+</div>
+@endforelse
 
             <div class="flex justify-between">
                 <span class="text-gray-500">Tanggal</span>

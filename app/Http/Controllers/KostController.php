@@ -116,7 +116,7 @@ public function login(Request $request)
 
     public function showBooking($id)
     {
-        $booking = Booking::with(['kost.pemilik'])->findOrFail($id);
+        $booking = Booking::with(['kost.pemilik.paymentMethods'])->findOrFail($id);
 
         return view('booking.show', compact('booking'));
     }
@@ -124,7 +124,7 @@ public function login(Request $request)
     // ✅ TAMBAHKAN DI SINI
     public function booking($id)
     {
-        $kost = Kost::with(['fotos','fasilitas','pemilik'])->findOrFail($id);
+        $kost = Kost::with(['fotos','fasilitas','pemilik.paymentMethods'])->findOrFail($id);
         return view('booking.index', compact('kost'));
     }
 

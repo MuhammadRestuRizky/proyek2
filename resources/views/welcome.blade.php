@@ -82,7 +82,7 @@
     <h2 class="text-4xl font-bold mb-1">
         Temukan Kost & Kontrakan Impianmu
     </h2>
-    <p class="text-gray-300 mb-2">
+    <p class="text-gray-300 mb-0">
         Ribuan pilihan kost dan kontrakan terbaik dengan harga terjangkau
     </p>
 
@@ -134,9 +134,9 @@
 </section>
 
 <!-- LIST KOST -->
-<section class="px-10 py-2">
+<section class="px-10 py-0">
 
-    <h3 class="text-xl font-semibold mb-6">Pilihan Terpopuler</h3>
+    <h3 class="text-xl font-semibold mb-1">Pilihan Terpopuler</h3>
 
     <!-- GRID -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

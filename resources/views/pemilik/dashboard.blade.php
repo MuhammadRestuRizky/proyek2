@@ -109,13 +109,13 @@
 <!-- CONTENT -->
 <div class="flex-1 ml-56 mt-20 px-6">
     <!-- HEADER -->
-    <div class="bg-gradient-to-r from-gray 200 to-gray-200 py-2 text-center shadow-inner">
+    <div class="bg-gradient-to-r from-gray 200 to-gray-200 py-1 text-center shadow-inner">
 
         <h1 class="text-2xl font-bold">
             Kelola Kost & Kontrakan Anda
         </h1>
 
-        <p class="text-gray-400 mt-1">
+        <p class="text-gray-400 mt-0">
             Kelola properti Anda dengan mudah dan profesional
         </p>
 
@@ -142,7 +142,7 @@
 
 <div class="px-10 py-2">
 
-    <h3 class="text-xl font-semibold mb-6">Iklan Anda</h3>
+    <h3 class="text-xl font-semibold mb-1">Iklan Anda</h3>
 
     <div class="grid md:grid-cols-4 gap-8">
 

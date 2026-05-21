@@ -6,6 +6,7 @@ use App\Http\Controllers\KostController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PemilikProfileController;
 
 require __DIR__.'/auth.php';
@@ -76,12 +77,24 @@ Route::middleware(['auth', 'role:costumer'])->group(function () {
 | PROFILE PEMILIK
 |------------------------------------------------------------------
 */
-Route::prefix('pemilik')
-    ->middleware(['auth', 'role:pemilik'])
-    ->group(function () {
+    Route::prefix('pemilik')->middleware(['auth', 'role:pemilik'])->group(function () {
 
-        Route::get('/profile', [PemilikProfileController::class, 'edit'])->name('pemilik.profile.edit');
-        Route::patch('/profile', [PemilikProfileController::class, 'update'])->name('pemilik.profile.update');
+    // Profile
+    Route::get('/profile', [PemilikProfileController::class, 'edit'])
+        ->name('pemilik.profile.edit');
+
+    Route::patch('/profile', [PemilikProfileController::class, 'update'])
+        ->name('pemilik.profile.update');
+
+    Route::put('/profile/update', [ProfileController::class, 'update'])
+        ->name('profile.update.custom');
+
+    // Payment Method
+    Route::post('/payment-method/store', [PaymentMethodController::class, 'store'])
+        ->name('payment-method.store');
+
+    Route::delete('/payment-method/{id}', [PaymentMethodController::class, 'destroy'])
+    ->name('payment-method.destroy');    
 
 });
 /*

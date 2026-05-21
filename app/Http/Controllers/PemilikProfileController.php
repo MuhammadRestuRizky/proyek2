@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Storage;
 
 class PemilikProfileController extends Controller
 {
     public function edit()
     {
-        return view('pemilik.profile.edit');
+        $user = auth()->user();
+        $paymentMethods = $user->paymentMethods;
+
+        return view('pemilik.profile.edit', compact('user', 'paymentMethods'));
     }
 
     public function update(Request $request)
@@ -20,9 +24,10 @@ class PemilikProfileController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'no_wa' => 'required',
-            'photo' => 'image|mimes:jpg,jpeg,png|max:2048'
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
+        // Upload foto
         if ($request->hasFile('photo')) {
 
             if ($user->photo) {
@@ -33,11 +38,32 @@ class PemilikProfileController extends Controller
             $user->photo = $path;
         }
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'no_wa' => $request->no_wa,
-        ]);
+        // Update profil user
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->no_wa = $request->no_wa;
+        $user->save();
+
+        // Simpan / update metode pembayaran
+        if ($request->payment_methods) {
+
+            foreach ($request->payment_methods as $method) {
+
+                if (!empty($method['method_name']) && !empty($method['account_number'])) {
+
+                    PaymentMethod::updateOrCreate(
+                        [
+                            'user_id' => $user->id,
+                            'method_name' => $method['method_name']
+                        ],
+                        [
+                            'account_number' => $method['account_number'],
+                            'is_active' => isset($method['is_active']) ? 1 : 0
+                        ]
+                    );
+                }
+            }
+        }
 
         return back()->with('success', 'Profil pemilik berhasil diperbarui!');
     }
