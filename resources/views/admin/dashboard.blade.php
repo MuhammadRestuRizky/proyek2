@@ -31,6 +31,8 @@
             position:fixed;
             left:0;
             top:0;
+            display:flex;
+            flex-direction:column;
         }
 
         .logo{
@@ -42,6 +44,44 @@
 
         .menu{
             margin-top:20px;
+        }
+
+        /* LOGOUT PALING BAWAH */
+        .logout-menu{
+            margin-top:auto;
+            width:100%;
+            background:none;
+            border:none;
+            color:white;
+            display:flex;
+            align-items:center;
+            gap:14px;
+            padding:18px 20px;
+            cursor:pointer;
+            font-size:17px;
+            font-weight:bold;
+            transition:.2s;
+            text-align:left;
+        }
+
+        .logout-menu:hover{
+            background:white;
+            color:black;
+        }
+
+        .logout-icon{
+            width:48px;
+            height:48px;
+            border:2px solid white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:28px;
+            font-weight:bold;
+        }
+
+        .logout-menu:hover .logout-icon{
+            border-color:black;
         }
 
         .menu a{
@@ -276,29 +316,47 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
 
-        <div class="logo">
-            KostKu
-        </div>
+    <div class="logo">
+        KostKu
+    </div>
 
-        <div class="menu">
+    <div class="menu">
 
-            <a href="#">
-                <div class="icon">Ad</div>
-                Kelola Iklan
-            </a>
+        <a href="{{ route('admin.kelola.iklan') }}">
+            <div class="icon">Ad</div>
+            Kelola Iklan
+        </a>
 
-            <a href="#">
-                <div class="icon">👤</div>
-                Kelola Akun Pemilik Properti
-            </a>
+        <a href="{{ route('admin.dashboard') }}">
+            <div class="icon">👤</div>
+            Kelola Akun Pemilik Properti
+        </a>
 
-            <a href="#">
-                <div class="icon">👤</div>
-                Kelola Akun Pencari Kost
-            </a>
-        </div>
+        <a href="{{ route('admin.customer') }}">
+            <div class="icon">👤</div>
+            Kelola Akun Pencari Kost
+        </a>
 
     </div>
+
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+
+        <button type="submit" class="logout-menu">
+
+            <div class="logout-icon">
+                ⇨
+            </div>
+
+            Logout
+
+        </button>
+
+    </form>
+
+</div>
+
+</div>
 
     <!-- MAIN -->
     <div class="main">

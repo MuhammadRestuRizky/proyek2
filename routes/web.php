@@ -186,4 +186,28 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/tolak/{id}', [AdminController::class, 'tolak'])
         ->name('admin.tolak');
 
+    Route::get('/admin/kelola-iklan', [AdminController::class, 'kelolaIklan'])
+        ->name('admin.kelola.iklan');
+
+    Route::delete('/admin/hapus-iklan/{id}', [AdminController::class, 'hapusIklan'])
+        ->name('admin.hapus.iklan');
+        
+    Route::get(
+    '/admin/customer',
+    [AdminController::class,'kelolaCustomer']
+    )->name('admin.customer');
+
+    Route::post(
+        '/admin/customer/nonaktif/{id}',
+        [AdminController::class,'nonaktifCustomer']
+    )->name('admin.customer.nonaktif');
+
+    Route::post(
+        '/admin/customer/aktif/{id}',
+        [AdminController::class,'aktifCustomer']
+    )->name('admin.customer.aktif');  
+    
+    Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
+
 });

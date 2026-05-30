@@ -26,6 +26,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'no_wa' => $request->no_wa,
             'role' => 'costumer',
+            'status_akun' => 'aktif',
             'password' => Hash::make($request->password),
         ]);
 
@@ -124,8 +125,22 @@ class AuthController extends Controller
             // =========================
             // COSTUMER
             // =========================
-            return redirect('/');
-        }
+            if ($user->role === 'costumer') {
+
+                // akun customer dinonaktifkan admin
+                if ($user->status_akun === 'nonaktif') {
+
+                    Auth::logout();
+
+                    return back()->withErrors([
+                        'email' => 'Akun Anda telah dinonaktifkan oleh admin.'
+                    ]);
+                }
+
+                // akun aktif
+                return redirect('/');
+            }
+            }
 
         return back()->withErrors([
             'email' => 'Email atau password salah',
@@ -142,6 +157,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('/');
     }
 }

@@ -35,7 +35,9 @@ public function login(Request $request)
 
     public function index(Request $request)
     {
-        $query = Kost::with('fasilitas')->where('status', 'Tersedia');
+        $query = Kost::with('fasilitas')
+            ->where('status', 'Tersedia')
+            ->where('status_iklan', 'aktif');
 
         // 🔍 SEARCH
         if ($request->filled('q')) {
@@ -78,6 +80,7 @@ public function login(Request $request)
     {
         $kost = Kost::with(['fasilitas', 'fotos'])
             ->where('status', 'Tersedia')
+            ->where('status_iklan', 'aktif')
             ->findOrFail($id);
 
         return view('kost.show', compact('kost'));
@@ -137,6 +140,7 @@ public function login(Request $request)
 
         $kosts = Kost::with('fotos')
             ->where('user_id', auth()->id())
+            ->where('status_iklan', 'aktif')
             ->latest()
             ->get();
 

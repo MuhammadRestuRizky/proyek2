@@ -248,57 +248,32 @@
 
 
         <!-- FASILITAS -->
-        <div class="bg-white border rounded-1xl p-3 shadow-sm">
+<div class="bg-white border rounded-1xl p-3 shadow-sm">
 
-            <h3 class="font-bold text-lg mb-1">
-                Fasilitas
-            </h3>
+    <h3 class="font-bold text-lg mb-1">
+        Fasilitas
+    </h3>
 
-            <div class="space-y-3 text-sm">
+    <div class="space-y-3 text-sm">
 
-                <label class="flex items-center gap-3">
-                    <input type="checkbox" name="fasilitas[]" value="1">
-                    WiFi
-                </label>
+        @foreach($fasilitas as $item)
 
-                <label class="flex items-center gap-3">
-                    <input type="checkbox" name="fasilitas[]" value="2">
-                    AC
-                </label>
+        <label class="flex items-center gap-3">
 
-                <label class="flex items-center gap-3">
-                    <input type="checkbox" name="fasilitas[]" value="3">
-                    Kamar Mandi Dalam
-                </label>
+            <input
+                type="checkbox"
+                name="fasilitas[]"
+                value="{{ $item->id }}">
 
-                <label class="flex items-center gap-3">
-                    <input type="checkbox" name="fasilitas[]" value="4">
-                    Parkir Motor
-                </label>
+            {{ $item->nama }}
 
-                <label class="flex items-center gap-3">
-                    <input type="checkbox" name="fasilitas[]" value="5">
-                    Parkir Mobil
-                </label>
+        </label>
 
-                <label class="flex items-center gap-3">
-                    <input type="checkbox" name="fasilitas[]" value="6">
-                    Dapur
-                </label>
+        @endforeach
 
-                <label class="flex items-center gap-3">
-                    <input type="checkbox" name="fasilitas[]" value="7">
-                    Laundry
-                </label>
+    </div>
 
-                <label class="flex items-center gap-3">
-                    <input type="checkbox" name="fasilitas[]" value="8">
-                    Security 24 Jam
-                </label>
-
-            </div>
-
-        </div>
+</div>
 
 
         <!-- BUTTON -->
