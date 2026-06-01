@@ -376,5 +376,14 @@ public function login(Request $request)
 
             return view('pemilik.pesanan', compact('bookings'));
         }
+        public function transaksi()
+        {
+            $bookings = Booking::with(['kost.fotos'])
+                ->where('user_id', auth()->id())
+                ->latest()
+                ->get();
+
+            return view('booking.transaksi', compact('bookings'));
+        }
 
 }

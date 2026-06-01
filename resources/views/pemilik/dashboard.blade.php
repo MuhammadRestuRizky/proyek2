@@ -76,12 +76,13 @@
 
     <div class="space-y-8">
 
-        <div class="flex items-center gap-4 hover:translate-x-1 transition">
+        <a href="{{ route('pemilik.profile.edit') }}" 
+            class="flex items-center gap-4 hover:translate-x-1 transition">
             <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">
                 👤
             </div>
             <span class="font-medium text-lg">Kelola Profil</span>
-        </div>
+        </a>
 
         <a href="{{ route('pemilik.kost.create') }}"
             class="flex items-center gap-4 hover:translate-x-1 transition cursor-pointer">

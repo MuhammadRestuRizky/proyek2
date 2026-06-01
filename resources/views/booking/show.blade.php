@@ -165,6 +165,12 @@
             Kontak Pemilik Kost
         </a>
 
+        <!-- KEMBALI KE DASHBOARD -->
+        <a href="/"
+        class="w-full bg-green-600 text-white py-3 rounded-xl text-sm font-medium flex justify-center items-center hover:bg-green-700 transition">
+            Kembali ke Dashboard
+        </a>
+
     @else
 
         <!-- FORM UPLOAD -->
@@ -175,7 +181,7 @@
             @csrf
 
             <label class="block text-sm font-medium mb-2">
-                Upload Bukti Pembayaran
+                SUBMIT PEMBAYARAN
             </label>
 
             <input type="file"
@@ -186,7 +192,7 @@
             <button type="submit"
                     class="w-full mt-4 bg-black text-white py-3 rounded-xl font-medium hover:opacity-90 transition">
 
-                Upload Bukti Pembayaran
+                SUBMIT PEMBAYARAN
 
             </button>
 

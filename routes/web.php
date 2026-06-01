@@ -64,7 +64,7 @@ Route::middleware(['auth', 'role:costumer'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // detail kost
+    Route::get('/transaksi', [KostController::class, 'transaksi'])->name('transaksi.index');
     Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
     Route::get('/booking/{id}', [KostController::class, 'booking'])->name('booking.create');
     Route::post('/booking', [KostController::class, 'storeBooking'])->name('booking.store');
