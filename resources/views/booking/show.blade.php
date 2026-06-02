@@ -210,6 +210,12 @@
                 <img src="{{ asset('storage/' . $booking->bukti_pembayaran) }}"
                      class="w-full max-w-sm rounded-2xl border">
 
+                <!-- Tombol Kembali -->
+                <a href="{{ route('home') }}"
+                class="mt-4 w-full bg-green-600 text-white py-3 rounded-xl text-sm font-medium flex justify-center items-center hover:bg-green-700 transition">
+                    Kembali ke Dashboard
+                </a>     
+
                 <div class="mt-3 inline-block px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
                     Menunggu Verifikasi Pemilik Kost
                 </div>
