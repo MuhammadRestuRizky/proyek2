@@ -7,8 +7,46 @@
 </head>
 <body class="bg-[#f5f6f8]">
 
-<div class="max-w-5xl mx-auto p-6">
+<body class="bg-[#f5f6f8]">
 
+<!-- NAVBAR -->
+<div class="bg-black text-white px-6 py-3 flex items-center justify-between">
+
+    <!-- KIRI (LOGO) -->
+    <div class="text-lg font-semibold">
+        KostKu
+    </div>
+
+    <!-- TENGAH (MENU) -->
+    <div class="flex gap-6 text-sm items-center">
+        <a href="{{ route('transaksi.index') }}" class="flex items-center gap-1 hover:text-gray-300">
+            📄 Transaksi
+        </a>
+        <a href="#" class="flex items-center gap-1 hover:text-gray-300">
+            🔍 Pencarian
+        </a>
+        <a href="{{ route('home') }}" 
+        class="flex items-center gap-1 hover:text-gray-300">
+            🏠 Beranda
+        </a>
+    </div>
+
+    <!-- KANAN (USER) -->
+    <div class="flex items-center gap-3">
+        <span>{{ auth()->user()->name ?? 'Warnadi' }}</span>
+        <div class="w-8 h-8 bg-gray-300 text-black rounded-full flex items-center justify-center text-sm">
+            {{ strtoupper(substr(auth()->user()->name ?? 'WA', 0, 2)) }}
+        </div>
+    </div>
+
+</div>
+    
+<!-- TOMBOL KEMBALI -->
+<div class="px-2 py-1">
+    <a href="{{ url()->previous() }}" class="text-gray-600 text-sm hover:underline">
+        ← Kembali
+    </a>
+</div>
     <h1 class="text-2xl font-bold mb-6">
         Riwayat Transaksi
     </h1>

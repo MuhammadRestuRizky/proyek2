@@ -17,6 +17,7 @@ class Kost extends Model
         'deskripsi',
         'harga',
         'tipe',
+        'gender',
         'kamar_mandi',
         'status',
         'maps'

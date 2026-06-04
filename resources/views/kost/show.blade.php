@@ -18,13 +18,13 @@
 
     <!-- TENGAH (MENU) -->
     <div class="flex gap-6 text-sm items-center">
-        <a href="#" class="flex items-center gap-1 hover:text-gray-300">
+        <a href="{{ route('transaksi.index') }}" class="flex items-center gap-1 hover:text-gray-300">
             📄 Transaksi
         </a>
         <a href="#" class="flex items-center gap-1 hover:text-gray-300">
             🔍 Pencarian
         </a>
-        <a href="#" class="flex items-center gap-1 hover:text-gray-300">
+        <a href="{{ route('home') }}" class="flex items-center gap-1 hover:text-gray-300">
             🏠 Beranda
         </a>
     </div>
@@ -186,13 +186,13 @@
             <div class="bg-white p-4 rounded-2xl border">
                 <h3 class="font-semibold mb-2">Lokasi</h3>
 
-                <div class="w-full h-40 rounded overflow-hidden">
-                    <iframe src="{{ $kost->maps }}"
-                        width="100%" height="100%" style="border:0;"
-                        loading="lazy">
-                    </iframe>
-                </div>
-
+              <div class="w-full h-40 rounded overflow-hidden">
+                {!! str_replace(
+                    ['width="600"', 'height="450"'],
+                    ['width="100%"', 'height="100%"'],
+                    $kost->maps
+                ) !!}
+            </div>
                 <p class="text-xs text-gray-500 mt-2">
                     {{ $kost->alamat }}
                 </p>

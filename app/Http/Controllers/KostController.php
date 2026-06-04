@@ -164,6 +164,7 @@ public function login(Request $request)
             'nama_kost' => 'required',
             'alamat' => 'required',
             'harga' => 'required|numeric',
+            'tipe' => 'required',
             'gender' => 'required',
             'deskripsi' => 'required',
             'foto.*' => 'image|mimes:jpg,jpeg,png|max:2048'
@@ -179,6 +180,7 @@ public function login(Request $request)
             'nama_kost' => $request->nama_kost ?? $request->nama,
             'alamat' => $request->alamat,
             'harga' => $request->harga,
+            'tipe' => $request->tipe,
             'gender' => $request->gender,
             'kamar_mandi' => $request->kamar_mandi,
             'status' => $request->status,
@@ -230,6 +232,7 @@ public function login(Request $request)
             'nama_kost' => 'required|max:255',
             'alamat' => 'required',
             'harga' => 'required|numeric',
+            'tipe' => 'required',
             'gender' => 'required',
             'status' => 'required|in:Tersedia,Habis',
             'kamar_mandi' => 'required|in:Dalam,Luar',
@@ -241,6 +244,7 @@ public function login(Request $request)
             'nama_kost' => $request->nama_kost,
             'alamat' => $request->alamat,
             'harga' => $request->harga,
+            'tipe' => $request->tipe,
             'gender' => $request->gender,
             'kamar_mandi' => $request->kamar_mandi,
             'deskripsi' => $request->deskripsi,
@@ -262,7 +266,7 @@ public function login(Request $request)
 
         return redirect()
             ->route('pemilik.dashboard')
-            ->with('success', 'Kost berhasil diupdate!');
+            ->with('success', 'Kost "' . $kost->nama_kost . '" berhasil diperbarui');
     }
 
     // ✅ HAPUS IKLAN

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Edit Iklan</title>
+<title>Pasang Iklan</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -16,313 +16,484 @@
 
 <!-- HEADER -->
 <div class="bg-gray-500 text-white text-center py-3 text-xl font-semibold">
-    Edit Iklan
+    EDIT IKLAN
 </div>
 
 <div class="max-w-7xl mx-auto p-6">
+    @if ($errors->any())
+<div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+    <strong>Error:</strong>
+    <ul class="mt-2 list-disc list-inside">
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 
 <form action="{{ route('pemilik.kost.update', $kost->id) }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
+@csrf
+@method('PUT')
+<div class="grid grid-cols-12 gap-6">
 
-<div class="grid grid-cols-3 gap-6">
+    <!-- LEFT -->
+    <div class="col-span-9 space-y-5">
 
-<!-- LEFT -->
-<div class="col-span-2 space-y-4">
+        <!-- FOTO -->
+        <div class="bg-white rounded-2xl border p-4">
 
-<!-- FOTO -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <h3 class="font-semibold mb-3">Foto Kost</h3>
+            <h3 class="font-bold text-xl mb-4">
+                Foto Kost / Kontrakan :
+            </h3>
 
-    <!-- INPUT -->
-    <input type="hidden" name="primary_index" id="primary_index">
+            @php
+                $fotoUtama = $kost->fotos->first();
+            @endphp
 
-    <input 
-        type="file" 
-        id="foto"
-        accept="image/*"
-        class="w-full border p-2 rounded"
-    >
+            <input type="hidden" name="primary_index" id="primary_index">
 
-    <p class="text-sm text-gray-500 mt-2">
-        Klik untuk menambah foto
-    </p>
+            <input
+                type="file"
+                id="foto"
+                accept="image/*"
+                class="hidden">
 
-    <!-- PREVIEW FOTO LAMA + BARU -->
-    <div id="preview-container" class="flex flex-wrap gap-3 mt-3">
-        @foreach($kost->fotos as $foto)
-            <div style="width:110px; height:110px; position:relative;">
+            <div class="grid grid-cols-12 gap-4">
 
-                <img src="{{ asset('storage/' . $foto->foto) }}"
-                     style="width:100%; height:100%; object-cover; ;">
+                <!-- FOTO BESAR -->
+                <div class="col-span-9">
 
+                    <div id="main-preview"
+                        class="w-full h-[420px] rounded-2xl bg-gray-200 overflow-hidden flex items-center justify-center">
 
-                <!-- HAPUS -->
-                <button type="button"
-                        onclick="hapusFoto({{ $foto->id }}, this.parentElement)"
-                        style="position:absolute; top: 3px; right: 3px; background: #ef4444; color: white; border:none; border:radius:50%; width:18px; height:18px; font-size:12px; cursor:pointer;">
-                    ×
-                </button>
-            </div>
-        @endforeach
-    </div>
-    <!-- TEMP FILE -->
-    <div id="hidden-inputs" hidden></div>
-    <input type="hidden" name="primary_index" id="primary_index">
-</div>
-<!-- HARGA -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Harga / Bulan</label>
-    <input type="number" name="harga"
-        value="{{ $kost->harga }}"
-        class="w-full border p-2 rounded mt-2">
-</div>
+                        @if($fotoUtama)
+                            <img
+                                src="{{ asset('storage/'.$fotoUtama->foto) }}"
+                                class="w-full h-full object-cover">
+                        @else
+                            <span class="text-gray-400">
+                                Belum ada foto
+                            </span>
+                        @endif
 
-<!-- STATUS -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Status</label>
-    <select name="status" class="w-full border p-2 rounded mt-2">
-        <option value="Tersedia" {{ $kost->status == 'Tersedia' ? 'selected' : '' }}>Tersedia</option>
-        <option value="Habis" {{ $kost->status == 'Habis' ? 'selected' : '' }}>Habis</option>
-    </select>
-</div>
+                    </div>
 
-<!-- DESKRIPSI -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Deskripsi</label>
-    <textarea name="deskripsi" class="w-full border p-2 rounded mt-2">{{ $kost->deskripsi }}</textarea>
-</div>
+                </div>
 
-<!-- ALAMAT -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Alamat</label>
-    <input type="text" name="alamat"
-        value="{{ $kost->alamat }}"
-        class="w-full border p-2 rounded mt-2">
-</div>
+                <!-- THUMBNAIL -->
+                <div class="col-span-3">
 
-<!-- MAPS -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Google Maps</label>
-    <input type="text" name="maps"
-        value="{{ $kost->maps }}"
-        class="w-full border p-2 mt-2 rounded">
-</div>
+                    <div id="preview-container" class="space-y-3">
 
-</div>
+                       @foreach($kost->fotos as $foto)
 
-<!-- RIGHT -->
-<div class="space-y-4">
+<div
+    id="foto-{{ $foto->id }}"
+    class="relative h-28 rounded-xl overflow-hidden border cursor-pointer">
 
-<!-- NAMA -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Nama Kost</label>
-    <input type="text" name="nama_kost"
-        value="{{ $kost->nama_kost }}"
-        class="w-full border p-2 mt-2 rounded" required>
-</div>
+    <img
+        src="{{ asset('storage/'.$foto->foto) }}"
+        class="w-full h-full object-cover"
+        onclick="document.getElementById('main-preview').innerHTML=
+        `<img src='{{ asset('storage/'.$foto->foto) }}'
+        class='w-full h-full object-cover'>`">
 
-<!-- TIPE -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Tipe</label>
-    <select name="tipe" class="w-full border p-2 rounded mt-2">
-        <option value="kost" {{ $kost->tipe == 'kost' ? 'selected' : '' }}>Kost</option>
-        <option value="kontrakan" {{ $kost->tipe == 'kontrakan' ? 'selected' : '' }}>Kontrakan</option>
-    </select>
-</div>
+    <button
+        type="button"
+        onclick="hapusFoto({{ $foto->id }})"
+        class="absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full">
 
-<!-- GENDER -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Untuk</label>
-    <select name="gender" class="w-full border p-2 rounded mt-2">
-        <option value="putra" {{ $kost->gender == 'putra' ? 'selected' : '' }}>Putra</option>
-        <option value="putri" {{ $kost->gender == 'putri' ? 'selected' : '' }}>Putri</option>
-        <option value="campur" {{ $kost->gender == 'campur' ? 'selected' : '' }}>Campur</option>
-    </select>
-</div>
+        ✕
 
-<!-- KAMAR MANDI -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Kamar Mandi</label>
-    <select name="kamar_mandi" class="w-full border p-2 rounded mt-2">
-        <option value="Dalam" {{ $kost->kamar_mandi == 'Dalam' ? 'selected' : '' }}>Dalam</option>
-        <option value="Luar" {{ $kost->kamar_mandi == 'Luar' ? 'selected' : '' }}>Luar</option>
-    </select>
-</div>
-
-<!-- FASILITAS -->
-<div class="bg-white p-4 rounded-xl shadow">
-    <label class="font-semibold">Fasilitas</label>
-
-    <div class="grid grid-cols-2 gap-2 mt-2 text-sm">
-        @foreach($fasilitas as $item)
-            <label class="flex items-center gap-2">
-                <input type="checkbox" name="fasilitas[]" value="{{ $item->id }}"
-                    {{ $kost->fasilitas->contains($item->id) ? 'checked' : '' }}>
-                {{ $item->nama }}
-            </label>
-        @endforeach
-    </div>
-</div>
-
-</div>
-
-</div>
-
-<!-- BUTTON -->
-<div class="flex justify-end gap-4 mt-6">
-    <button class="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
-        Update Iklan
     </button>
 
-    <a href="{{ route('pemilik.dashboard') }}"
-       class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700">
-        Batal
-    </a>
 </div>
 
+@endforeach
+
+                    </div>
+
+                    <button
+                        type="button"
+                        onclick="document.getElementById('foto').click()"
+                        class="w-full h-32 border-2 border-dashed rounded-2xl flex items-center justify-center text-6xl text-gray-400 hover:bg-gray-100 transition mt-3">
+
+                        +
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div id="hidden-inputs"></div>
+
+        </div>
+
+        <!-- HARGA -->
+        <div class="bg-white p-4 rounded-xl shadow">
+            <label class="font-semibold">Harga / Bulan</label>
+            <input
+                type="number"
+                name="harga"
+                value="{{ $kost->harga }}"
+                class="w-full border p-2 rounded mt-2">
+        </div>
+
+        <!-- STATUS -->
+        <div class="bg-white p-4 rounded-xl shadow">
+            <label class="font-semibold">Status</label>
+
+            <select
+                name="status"
+                class="w-full border p-2 rounded mt-2">
+
+                <option value="Tersedia"
+                    {{ $kost->status == 'Tersedia' ? 'selected' : '' }}>
+                    Tersedia
+                </option>
+
+                <option value="Habis"
+                    {{ $kost->status == 'Habis' ? 'selected' : '' }}>
+                    Habis
+                </option>
+
+            </select>
+        </div>
+
+        <!-- DESKRIPSI -->
+        <div class="bg-white p-4 rounded-xl shadow">
+            <label class="font-semibold">Deskripsi</label>
+
+            <textarea
+                name="deskripsi"
+                class="w-full border p-2 rounded mt-2">{{ $kost->deskripsi }}</textarea>
+        </div>
+
+        <!-- ALAMAT -->
+        <div class="bg-white p-4 rounded-xl shadow">
+            <label class="font-semibold">Alamat</label>
+
+            <input
+                type="text"
+                name="alamat"
+                value="{{ $kost->alamat }}"
+                class="w-full border p-2 rounded mt-2">
+        </div>
+
+        <!-- GOOGLE MAPS -->
+        <div class="bg-white p-4 rounded-xl shadow">
+
+            <label class="font-semibold">
+                Google Maps (Embed Link)
+            </label>
+
+            <input
+                type="text"
+                name="maps"
+                id="maps"
+                value="{{ $kost->maps }}"
+                class="w-full border p-2 mt-2 rounded">
+  <div class="w-full h-40 rounded overflow-hidden">
+                {!! str_replace(
+                    ['width="600"', 'height="450"'],
+                    ['width="100%"', 'height="100%"'],
+                    $kost->maps
+                ) !!}
+            </div>
+           
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col-span-3">
+
+        <div class="space-y-4 sticky top-5">
+
+            <!-- NAMA -->
+            <div class="bg-white border rounded-xl p-2 shadow-sm">
+
+                <h3 class="font-bold text-lg mb-1">
+                    Nama Kost / Kontrakan
+                </h3>
+
+                <input
+                    type="text"
+                    name="nama_kost"
+                    value="{{ $kost->nama_kost }}"
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3"
+                    required>
+
+            </div>
+
+            <!-- TIPE -->
+            <div class="bg-white border rounded-xl p-2 shadow-sm">
+
+                <h3 class="font-bold text-lg mb-1">
+                    Tipe Properti
+                </h3>
+
+                <div class="space-y-3 text-sm">
+
+                    <label class="flex items-center gap-3">
+                        <input
+                            type="radio"
+                            name="tipe"
+                            value="kost"
+                            {{ $kost->tipe == 'kost' ? 'checked' : '' }}>
+                        Kost
+                    </label>
+
+                    <label class="flex items-center gap-3">
+                        <input
+                            type="radio"
+                            name="tipe"
+                            value="kontrakan"
+                            {{ $kost->tipe == 'kontrakan' ? 'checked' : '' }}>
+                        Kontrakan
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- GENDER -->
+            <div class="bg-white border rounded-xl p-2 shadow-sm">
+
+                <h3 class="font-bold text-lg mb-1">
+                    Untuk
+                </h3>
+
+                <div class="space-y-3 text-sm">
+
+                    <label class="flex items-center gap-3">
+                        <input type="radio"
+                            name="gender"
+                            value="putra"
+                            {{ $kost->gender == 'putra' ? 'checked' : '' }}>
+                        Putra
+                    </label>
+
+                    <label class="flex items-center gap-3">
+                        <input type="radio"
+                            name="gender"
+                            value="putri"
+                            {{ $kost->gender == 'putri' ? 'checked' : '' }}>
+                        Putri
+                    </label>
+
+                    <label class="flex items-center gap-3">
+                        <input type="radio"
+                            name="gender"
+                            value="campur"
+                            {{ $kost->gender == 'campur' ? 'checked' : '' }}>
+                        Campur
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- KAMAR MANDI -->
+            <div class="bg-white border rounded-xl p-3 shadow-sm">
+
+                <h3 class="font-bold text-lg mb-1">
+                    Kamar Mandi
+                </h3>
+
+                <div class="space-y-3 text-sm">
+
+                    <label class="flex items-center gap-3">
+                        <input
+                            type="radio"
+                            name="kamar_mandi"
+                            value="Dalam"
+                            {{ $kost->kamar_mandi == 'Dalam' ? 'checked' : '' }}>
+                        Dalam
+                    </label>
+
+                    <label class="flex items-center gap-3">
+                        <input
+                            type="radio"
+                            name="kamar_mandi"
+                            value="Luar"
+                            {{ $kost->kamar_mandi == 'Luar' ? 'checked' : '' }}>
+                        Luar
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- FASILITAS -->
+            <div class="bg-white border rounded-xl p-3 shadow-sm">
+
+                <h3 class="font-bold text-lg mb-1">
+                    Fasilitas
+                </h3>
+
+                <div class="space-y-3 text-sm">
+
+                    @foreach($fasilitas as $item)
+
+                    <label class="flex items-center gap-3">
+
+                        <input
+                            type="checkbox"
+                            name="fasilitas[]"
+                            value="{{ $item->id }}"
+                            {{ $kost->fasilitas->contains($item->id) ? 'checked' : '' }}>
+
+                        {{ $item->nama }}
+
+                    </label>
+
+                    @endforeach
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+            <div class="flex gap-3 pt-2">
+
+                <button
+                    type="submit"
+                    class="flex-1 bg-black text-white py-3 rounded-xl">
+
+                    Simpan Perubahan
+
+                </button>
+
+                <a
+                    href="{{ route('pemilik.dashboard') }}"
+                    class="flex-1 bg-red-600 text-white py-3 rounded-xl text-center">
+
+                    Batal
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 </form>
+
+
 <script>
 let selectedFiles = [];
-let primaryIndex = -1;
-
 
 document.getElementById('foto').addEventListener('change', function(e) {
 
-    const file = e.target.files[0];
+    let file = e.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-        alert('File harus berupa gambar');
-        return;
+    let container = document.getElementById('preview-container');
+    let hiddenInputs = document.getElementById('hidden-inputs');
+    let mainPreview = document.getElementById('main-preview');
+
+    let imageUrl = URL.createObjectURL(file);
+
+    // FOTO UTAMA
+    if(selectedFiles.length === 0){
+        mainPreview.innerHTML = `
+            <img src="${imageUrl}"
+                 class="w-full h-full object-cover">
+        `;
     }
 
-    const container = document.getElementById('preview-container');
-    const hiddenInputs = document.getElementById('hidden-inputs');
+    // THUMBNAIL
+    let thumb = document.createElement('div');
 
-    const index = selectedFiles.length;
-    selectedFiles.push(file);
+    thumb.className =
+        'relative w-full h-28 rounded-xl overflow-hidden border cursor-pointer';
 
-    // WRAPPER
-    const div = document.createElement('div');
-    div.style.width = "110px";
-    div.style.height = "110px";
-    div.style.position = "relative";
-    div.style.flex = "0 0 auto";
+    thumb.innerHTML = `
+        <img src="${imageUrl}"
+             class="w-full h-full object-cover">
+    `;
 
-    // IMAGE
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "cover";
-    img.style.borderRadius = "8px";
+    thumb.onclick = function() {
 
-    // BUTTON HAPUS
-    const btnDelete = document.createElement('button');
-    btnDelete.innerHTML = "×";
-    btnDelete.style.position = "absolute";
-    btnDelete.style.top = "3px";
-    btnDelete.style.right = "3px";
-    btnDelete.style.background = "#ef4444";
-    btnDelete.style.color = "white";
-    btnDelete.style.border = "none";
-    btnDelete.style.borderRadius = "50%";
-    btnDelete.style.width = "18px";
-    btnDelete.style.height = "18px";
-    btnDelete.style.fontSize = "12px";
-    btnDelete.style.cursor = "pointer";
-
-    // BUTTON UTAMA
-    const btnPrimary = document.createElement('button');
-    btnPrimary.style.position = "absolute";
-    btnPrimary.style.bottom = "3px";
-    btnPrimary.style.left = "3px";
-    btnPrimary.style.background = "black";
-    btnPrimary.style.color = "white";
-    btnPrimary.style.fontSize = "10px";
-    btnPrimary.style.padding = "2px 4px";
-    btnPrimary.style.borderRadius = "4px";
-    btnPrimary.style.border = "none";
-    btnPrimary.style.cursor = "pointer";
-
-    btnPrimary.onclick = function(e) {
-        e.preventDefault();
-
-        // 🔥 HAPUS SEMUA LABEL UTAMA (LAMA + BARU)
-        document.querySelectorAll('.label-utama').forEach(el => el.remove());
-
-        primaryIndex = index;
-        document.getElementById('primary_index').value = index;
-
-        const label = document.createElement('span');
-        label.innerHTML = "UTAMA";
-        label.className = "label-utama";
-        label.style.position = "absolute";
-        label.style.top = "3px";
-        label.style.left = "3px";
-        label.style.background = "green";
-        label.style.color = "white";
-        label.style.fontSize = "10px";
-        label.style.padding = "2px 4px";
-        label.style.borderRadius = "4px";
-
-        div.appendChild(label);
+        mainPreview.innerHTML = `
+            <img src="${imageUrl}"
+                 class="w-full h-full object-cover">
+        `;
     };
 
-    // HIDDEN INPUT
-    const dt = new DataTransfer();
+    container.appendChild(thumb);
+
+    // SIMPAN FILE
+    let dt = new DataTransfer();
     dt.items.add(file);
 
-    const input = document.createElement('input');
+    let input = document.createElement('input');
     input.type = 'file';
     input.name = 'foto[]';
     input.files = dt.files;
 
     hiddenInputs.appendChild(input);
 
-    // DELETE ACTION
-    btnDelete.onclick = function(e) {
-        e.preventDefault();
-        div.remove();
-        input.remove();
-        selectedFiles.splice(index, 1);
-    };
-
-    // APPEND
-    div.appendChild(img);
-    div.appendChild(btnDelete);
-    div.appendChild(btnPrimary);
-
-    container.appendChild(div);
+    selectedFiles.push(file);
 
     e.target.value = "";
 });
 </script>
 <script>
-function hapusFoto(id, el) {
 
-    if (!confirm('Yakin mau hapus foto ini?')) return;
+function hapusFoto(id){
 
-    fetch (`/pemilik/foto/${id}`, {
+    if(!confirm('Hapus foto ini?')){
+        return;
+    }
+
+    fetch('/pemilik/foto/' + id, {
+
         method: 'DELETE',
+
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
+            'X-CSRF-TOKEN':
+            '{{ csrf_token() }}'
         }
+
     })
+
     .then(res => res.json())
+
     .then(data => {
-        if (data.success) {
-            location.reload(); // reload biar langsung hilang
-        } else {
-            alert('Gagal hapus foto');
+
+        if(data.success){
+
+            document
+                .getElementById('foto-' + id)
+                .remove();
+
         }
-    })
-    .catch(err => {
-        console.log(err);
-        alert('Error server');
+
     });
+
 }
+
 </script>
-</div>
+
+
+<!-- SCRIPT MAP PREVIEW -->
+<script>
+const mapsInput = document.getElementById('maps');
+const mapPreview = document.getElementById('mapPreview');
+
+mapsInput.addEventListener('input', function () {
+    if (this.value.includes("google.com")) {
+        mapPreview.src = this.value;
+        mapPreview.classList.remove('hidden');
+    }
+});
+</script>
+
+</body>
+</html>

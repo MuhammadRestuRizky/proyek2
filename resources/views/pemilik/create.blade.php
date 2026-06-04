@@ -87,7 +87,7 @@
 
     <!-- HARGA -->
     <div class="bg-white p-4 rounded-xl shadow">
-        <label class="font-semibold">Harga / Bulan</label>
+        <label class="font-semibold">Harga per Bulan</label>
         <input type="number" name="harga" class="w-full border p-2 rounded mt-2">
     </div>
 
@@ -113,17 +113,27 @@
     </div>
 
     <!-- GOOGLE MAPS -->
-    <div class="bg-white p-4 rounded-xl shadow">
-        <label class="font-semibold">Google Maps (Embed Link)</label>
-        <input type="text" name="maps" id="maps" class="w-full border p-2 mt-2 rounded"
-               placeholder="Paste link embed Google Maps">
+ <!-- GOOGLE MAPS -->
+<div class="bg-white p-4 rounded-xl shadow">
 
-        <!-- PREVIEW MAP -->
-        <iframe id="mapPreview"
-                class="w-full h-60 mt-3 rounded hidden"
-                frameborder="0">
-        </iframe>
+    <label class="font-semibold">
+        Google Maps (Embed Code)
+    </label>
+
+    <textarea
+        name="maps"
+        id="maps"
+        rows="5"
+        class="w-full border p-2 mt-2 rounded"
+        placeholder="Paste kode iframe Google Maps di sini"></textarea>
+
+    <!-- PREVIEW -->
+    <div
+        id="mapPreviewContainer"
+        class="hidden mt-3 w-full h-60 rounded overflow-hidden border">
     </div>
+
+</div>
 
 </div>
 
@@ -322,24 +332,27 @@ document.getElementById('foto').addEventListener('change', function(e) {
     }
 
     // THUMBNAIL
-    let thumb = document.createElement('div');
+let thumb = document.createElement('div');
 
-    thumb.className =
-        'relative w-full h-28 rounded-xl overflow-hidden border cursor-pointer';
+thumb.className =
+    'relative w-full h-28 rounded-xl overflow-hidden border cursor-pointer';
 
-    thumb.innerHTML = `
+thumb.innerHTML = `
+    <img src="${imageUrl}"
+         class="w-full h-full object-cover">
+
+    <button type="button"
+        class="absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full text-sm font-bold">
+        ✕
+    </button>
+`;
+
+thumb.onclick = function() {
+    mainPreview.innerHTML = `
         <img src="${imageUrl}"
              class="w-full h-full object-cover">
     `;
-
-    thumb.onclick = function() {
-
-        mainPreview.innerHTML = `
-            <img src="${imageUrl}"
-                 class="w-full h-full object-cover">
-        `;
-    };
-
+};
     container.appendChild(thumb);
 
     // SIMPAN FILE
@@ -352,6 +365,25 @@ document.getElementById('foto').addEventListener('change', function(e) {
     input.files = dt.files;
 
     hiddenInputs.appendChild(input);
+    thumb.querySelector('button').onclick = function(event){
+
+    event.stopPropagation();
+
+    thumb.remove();
+    input.remove();
+
+    selectedFiles = selectedFiles.filter(
+        f => f !== file
+    );
+
+    if(selectedFiles.length === 0){
+        mainPreview.innerHTML = `
+            <span class="text-gray-400">
+                Belum ada foto
+            </span>
+        `;
+    }
+};
 
     selectedFiles.push(file);
 
@@ -360,18 +392,34 @@ document.getElementById('foto').addEventListener('change', function(e) {
 </script>
 
 
-<!-- SCRIPT MAP PREVIEW -->
 <script>
+
 const mapsInput = document.getElementById('maps');
-const mapPreview = document.getElementById('mapPreview');
+const mapPreviewContainer = document.getElementById('mapPreviewContainer');
 
 mapsInput.addEventListener('input', function () {
-    if (this.value.includes("google.com")) {
-        mapPreview.src = this.value;
-        mapPreview.classList.remove('hidden');
-    }
-});
-</script>
 
+    let iframeCode = this.value.trim();
+
+    if (iframeCode.includes('<iframe')) {
+
+        iframeCode = iframeCode
+            .replace(/width="[^"]*"/g, 'width="100%"')
+            .replace(/height="[^"]*"/g, 'height="100%"');
+
+        mapPreviewContainer.innerHTML = iframeCode;
+
+        mapPreviewContainer.classList.remove('hidden');
+
+    } else {
+
+        mapPreviewContainer.innerHTML = '';
+
+        mapPreviewContainer.classList.add('hidden');
+    }
+
+});
+
+</script>
 </body>
 </html>

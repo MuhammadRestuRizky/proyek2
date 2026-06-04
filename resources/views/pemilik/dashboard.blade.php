@@ -144,7 +144,17 @@
 <div class="px-10 py-2">
 
     <h3 class="text-xl font-semibold mb-1">Iklan Anda</h3>
+    @if(session('success'))
+<div
+    x-data="{ show: true }"
+    x-show="show"
+    x-init="setTimeout(() => show = false, 3000)"
+    class="mb-4 bg-green-500 text-white px-4 py-3 rounded-xl shadow">
 
+    ✅ {{ session('success') }}
+
+</div>
+@endif
     <div class="grid md:grid-cols-4 gap-8">
 
     @forelse ($kosts as $kost)
@@ -185,7 +195,9 @@
 
         {{-- BADGE --}}
         <div class="flex gap-2 mb-2 text-xs">
-            <span class="bg-black text-white px-2 py-1 rounded-full">Kost</span>
+            <span class="bg-black text-white px-2 py-1 rounded-full">
+                {{ ucfirst($kost->tipe ?? 'kost') }}
+            </span>
 
             <span class="bg-gray-200 px-2 py-1 rounded-full">
                 {{ ucfirst($kost->gender ?? 'Putra') }}
