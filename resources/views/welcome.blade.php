@@ -261,7 +261,7 @@
     <p class="text-gray-400 mb-4">
         Pasang iklan properti Anda dan jangkau ribuan calon penyewa
     </p>
-    <a href="/login-pemilik"
+    <a href="/login"
        class="inline-block bg-white text-black px-6 py-2 rounded hover:bg-gray-200 transition">
         Pasang Iklan Gratis
     </a>

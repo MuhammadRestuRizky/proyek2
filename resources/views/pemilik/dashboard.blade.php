@@ -121,29 +121,31 @@
         </p>
 
         <!-- FILTER -->
-        <div class="mt-0 flex justify-center">
-            <div class="bg-white rounded-full shadow flex overflow-hidden">
+<div class="mt-0 flex justify-center">
+    <div class="bg-white rounded-full shadow flex overflow-hidden">
 
-                <button class="px-6 py-2 bg-black text-white text-sm">
-                    Kostan
-                </button>
+        <a href="{{ route('pemilik.dashboard') }}"
+           class="px-6 py-2 text-sm
+           {{ request('tipe') == null ? 'bg-black text-white' : 'hover:bg-gray-100' }}">
+            Semua
+        </a>
 
-                <button class="px-6 py-2 text-sm hover:bg-gray-100 transition">
-                    Kontrakan
-                </button>
+        <a href="{{ route('pemilik.dashboard', ['tipe' => 'kost']) }}"
+           class="px-6 py-2 text-sm
+           {{ request('tipe') == 'kost' ? 'bg-black text-white' : 'hover:bg-gray-100' }}">
+            Kostan
+        </a>
 
-                <button class="px-6 py-2 text-sm hover:bg-gray-100 transition">
-                    Semua
-                </button>
-
-            </div>
+        <a href="{{ route('pemilik.dashboard', ['tipe' => 'kontrakan']) }}"
+           class="px-6 py-2 text-sm
+           {{ request('tipe') == 'kontrakan' ? 'bg-black text-white' : 'hover:bg-gray-100' }}">
+            Kontrakan
+        </a>
         </div>
 
     </div>
 
 <div class="px-10 py-2">
-
-    <h3 class="text-xl font-semibold mb-1">Iklan Anda</h3>
     @if(session('success'))
 <div
     x-data="{ show: true }"
@@ -159,8 +161,8 @@
 
     @forelse ($kosts as $kost)
 
-<!-- CARD -->
-<div class="bg-white rounded-2xl shadow overflow-hidden">
+<a href="{{ route('pemilik.kost.edit', $kost->id) }}"
+   class="block bg-white rounded-2xl shadow overflow-hidden hover:shadow-lg hover:-translate-y-1 transition duration-200">
 
     {{-- HERO IMAGE --}}
     @php
@@ -237,21 +239,15 @@
                 Rp {{ number_format($kost->harga) }}
                 <span class="text-sm text-gray-400">/bulan</span>
             </p>
-
-            <a href="{{ route('pemilik.kost.edit', $kost->id) }}"
-            class="text-xs px-3 py-1 rounded-lg border border-gray-300 hover:bg-gray-100">
-                Edit
-            </a>
         </div>
 
     </div>
 
-</div>   
+</a> 
     @empty
         <p class="text-gray-500">Belum ada kost</p>
     @endforelse
 
-</div>
 
 
 <!-- ================= MODAL ================= -->

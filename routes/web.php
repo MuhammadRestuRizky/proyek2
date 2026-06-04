@@ -38,7 +38,7 @@ Route::get('/login', function () {
 
 // login pemilik (UI saja beda)
 Route::get('/login-pemilik', function () {
-    return view('auth.login_pemilik');
+    return view('/login');
 })->name('login.pemilik');
 
 Route::get('/login-admin', function () {

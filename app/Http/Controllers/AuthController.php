@@ -19,6 +19,9 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'no_wa' => 'required',
             'password' => 'required|min:6'
+    ],[
+    'password.min' => 'Password minimal 6 karakter.',
+    'password.required' => 'Password wajib diisi.'
         ]);
 
         User::create([
@@ -37,14 +40,34 @@ class AuthController extends Controller
     // REGISTER PEMILIK
     // =====================
     public function registerPemilik(Request $request)
-    {
+    {$userDitolak = User::where('email', $request->email)
+    ->where('status_akun', 'ditolak')
+    ->first();
+
+if ($userDitolak) {
+
+    // hapus file lama
+    if ($userDitolak->ktp) {
+        \Storage::disk('public')->delete($userDitolak->ktp);
+    }
+
+    if ($userDitolak->dokumen) {
+        \Storage::disk('public')->delete($userDitolak->dokumen);
+    }
+
+    // hapus akun lama
+    $userDitolak->delete();
+}
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'no_wa' => 'required',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:6',
             'ktp' => 'required|file',
             'dokumen' => 'required|file',
+            ],[
+    'password.min' => 'Password minimal 6 karakter.',
+    'password.required' => 'Password wajib diisi.'
         ]);
 
         // upload file
@@ -105,7 +128,7 @@ class AuthController extends Controller
                     Auth::logout();
 
                     return back()->withErrors([
-                        'email' => 'Akun Anda ditolak oleh admin.'
+                        'email' => 'Akun Anda ditolak oleh admin. Silakan daftar ulang dengan memperbaiki data yang diperlukan.'
                     ]);
                 }
 

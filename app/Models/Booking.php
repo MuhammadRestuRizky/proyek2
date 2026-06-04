@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Kost;
 use App\Models\User;
+use App\Models\PaymentMethod;
 
 class Booking extends Model
 {
@@ -16,6 +17,7 @@ class Booking extends Model
         'tanggal_masuk',
         'durasi',
         'metode',
+        'payment_method_id',
         'total',
         'status'
     ];
@@ -30,6 +32,11 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function paymentMethod()
+{
+    return $this->belongsTo(PaymentMethod::class);
+}
     // 🔥 relasi langsung ke pemilik lewat kost
     public function pemilik()
     {

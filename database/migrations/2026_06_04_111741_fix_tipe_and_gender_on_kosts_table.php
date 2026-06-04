@@ -10,14 +10,19 @@ return new class extends Migration
     public function up(): void
     {
         // Tambah kolom gender
-        Schema::table('kosts', function (Blueprint $table) {
-            $table->enum('gender', [
-                'putra',
-                'putri',
-                'campur'
-            ])->nullable()->after('tipe');
-        });
+        if (!Schema::hasColumn('kosts', 'gender')) {
 
+    Schema::table('kosts', function (Blueprint $table) {
+
+        $table->enum('gender', [
+            'putra',
+            'putri',
+            'campur'
+        ])->nullable()->after('tipe');
+
+    });
+
+}
         // Pindahkan data lama dari tipe -> gender
         DB::table('kosts')
             ->where('tipe', 'Putra')

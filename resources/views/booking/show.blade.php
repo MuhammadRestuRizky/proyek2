@@ -21,9 +21,18 @@
             </p>
         </div>
 
-        <span class="text-xs px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 font-medium">
-            {{ ucfirst($booking->status) }}
-        </span>
+        <span class="text-xs px-3 py-1 rounded-full font-medium
+
+@if($booking->status == 'disetujui')
+    bg-green-100 text-green-700
+@elseif($booking->status == 'ditolak')
+    bg-red-100 text-red-700
+@else
+    bg-yellow-100 text-yellow-700
+@endif
+">
+    {{ ucfirst($booking->status) }}
+</span>
     </div>
 
     <!-- NOTIF -->
@@ -87,32 +96,13 @@
 
 
     <!-- RINCIAN PEMBAYARAN -->
-    <h3 class="text-xl font-bold mt-6 mb-3">
-    Metode Pembayaran Pemilik Kost
-</h3>
+    <!-- INFORMASI PEMBAYARAN -->
+<div class="bg-white p-4 rounded-2xl border">
 
-@forelse($booking->kost->pemilik->paymentMethods->where('is_active', true) as $payment)
-
-<div class="border rounded-lg p-4 mb-3 bg-gray-50">
-
-    <div class="font-bold text-lg">
-        {{ $payment->method_name }}
-    </div>
-
-    <div class="text-gray-700">
-        Nomor: {{ $payment->account_number }}
-    </div>
-
-</div>
-
-@empty
-
-<div class="text-red-500">
-    Pemilik kost belum menambahkan metode pembayaran
-</div>
-@endforelse
-
-            <div class="flex justify-between">
+    <h3 class="font-semibold mb-4">
+        Informasi Pembayaran
+    </h3>
+    <div class="flex justify-between">
                 <span class="text-gray-500">Tanggal</span>
 
                 <span>
@@ -120,30 +110,66 @@
                 </span>
             </div>
 
-            <div class="border-t my-2"></div>
+    @if($booking->paymentMethod)
 
-            <div class="flex justify-between">
-                <span>Harga / bulan</span>
+<div class="border rounded-lg p-4 mb-3 bg-gray-50">
 
-                <span>
-                    Rp {{ number_format($booking->kost->harga,0,',','.') }}
-                </span>
-            </div>
+    <div class="font-bold text-lg">
+        {{ $booking->paymentMethod->method_name }}
+    </div>
 
-            <div class="flex justify-between">
-                <span>Durasi</span>
-                <span>{{ $booking->durasi }} bulan</span>
-            </div>
+    <div class="flex justify-between items-center mt-2">
 
-            <div class="flex justify-between text-base font-bold mt-2">
-                <span>Total</span>
-
-                <span>
-                    Rp {{ number_format($booking->total,0,',','.') }}
-                </span>
-            </div>
+        <div id="rekening">
+            {{ $booking->paymentMethod->account_number }}
         </div>
 
+        <button
+            onclick="copyRekening()"
+            class="px-3 py-1 bg-black text-white rounded-lg text-sm">
+
+            Salin
+        </button>
+
+    </div>
+
+</div>
+
+@endif
+
+    <div class="border-t my-4"></div>
+
+    <div class="flex justify-between mb-2">
+        <span class="text-gray-500">
+            Harga per bulan
+        </span>
+
+        <span>
+            Rp {{ number_format($booking->kost->harga,0,',','.') }}
+        </span>
+    </div>
+
+    <div class="flex justify-between mb-2">
+        <span class="text-gray-500">
+            Durasi
+        </span>
+
+        <span>
+            {{ $booking->durasi }} bulan
+        </span>
+    </div>
+
+    <div class="border-t my-3"></div>
+
+    <div class="flex justify-between text-lg font-bold">
+        <span>Total</span>
+
+        <span>
+            Rp {{ number_format($booking->total,0,',','.') }}
+        </span>
+    </div>
+
+</div>
         <!-- ACTION -->
 <div class="mt-4 space-y-3">
 
@@ -228,37 +254,92 @@
 
 </div>
 
-    <!-- INFORMASI PENYEWA -->
-    <div class="bg-white p-4 rounded-2xl border">
+    <!-- INFORMASI PEMILIK KOST -->
 
-        <h3 class="font-semibold mb-3">
-            Informasi Penyewa
-        </h3>
+     <h3 class="font-semibold text-lg mb-1">
+        Informasi Pemilik Kost
+    </h3>
+<div class="bg-white p-1 rounded-1xl border">
 
-        <div class="grid grid-cols-2 gap-4 text-sm">
+    <div class="grid md:grid-cols-2 gap-2 items-start">
 
-            <div>
-                <p class="text-gray-400 text-xs">Nama</p>
-                <p class="font-medium">{{ $booking->nama }}</p>
-            </div>
+        <!-- KIRI -->
+        <div class="space-y-4">
 
-            <div>
-                <p class="text-gray-400 text-xs">No Telepon</p>
-                <p class="font-medium">{{ $booking->no_telp }}</p>
-            </div>
+            <div class="mb-3">
+                <p class="text-xs text-gray-400">Nama</p>
 
-            <div>
-                <p class="text-gray-400 text-xs">Pemilik</p>
-
-                <p class="font-medium">
+                <p class="font-semibold text-base">
                     {{ $booking->kost->pemilik->name ?? '-' }}
                 </p>
             </div>
 
+            <div>
+                <p class="text-xs text-gray-400">No. Telepon</p>
+
+                <p class="font-semibold text-base">
+                    {{ $booking->kost->pemilik->no_wa ?? '-' }}
+                </p>
+            </div>
+
         </div>
+
+        <!-- KANAN -->
+        <div class="space-y-2">
+
+            <p class="font-semibold text-base-400 mb-2">
+                Lokasi
+            </p>
+            @php
+            $mapsLink = "https://www.google.com/maps/search/?api=1&query=" .
+                        urlencode($booking->kost->alamat);
+            @endphp
+            @if($booking->kost->maps)
+
+                <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($booking->kost->alamat) }}"
+                   target="_blank">
+
+                    <div class="overflow-hidden rounded-xl border hover:opacity-90 transition">
+
+                        {!! str_replace(
+                            ['width="600"', 'height="450"'],
+                            ['width="100%"', 'height="180"'],
+                            $booking->kost->maps
+                        ) !!}
+
+                    </div>
+
+                </a>
+
+                <p class="text-xs text-gray-500 mt-2">
+                    {{ $booking->kost->alamat }}
+                </p>
+
+            @endif
+
+        </div>
+
     </div>
 
 </div>
+<script>
+function copyNumber(text) {
 
+    navigator.clipboard.writeText(text);
+
+    alert('Nomor pembayaran berhasil disalin');
+}
+</script>
+<script>
+function copyRekening() {
+
+    let rekening =
+        document.getElementById('rekening').innerText;
+
+    navigator.clipboard.writeText(rekening);
+
+    alert('Nomor berhasil disalin');
+}
+</script>
 </body>
 </html>

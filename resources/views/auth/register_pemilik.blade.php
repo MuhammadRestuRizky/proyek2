@@ -78,22 +78,29 @@
         </div>
 
         <!-- PASSWORD -->
-        <div class="mb-4">
-            <label class="text-sm">Password</label>
-            <input type="password" name="password"
-                placeholder="Minimal 6 karakter"
-                class="w-full mt-1 px-4 py-2 bg-gray-100 rounded-lg focus:outline-none"
-                required>
-        </div>
+<div class="mb-4">
+    <label class="text-sm">Password</label>
 
-        <!-- KONFIRM PASSWORD -->
-        <div class="mb-4">
-            <label class="text-sm">Konfirmasi Password</label>
-            <input type="password" name="password_confirmation"
-                placeholder="Ulangi password"
-                class="w-full mt-1 px-4 py-2 bg-gray-100 rounded-lg focus:outline-none"
-                required>
-        </div>
+    <div class="relative">
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Minimal 6 karakter"
+            class="w-full mt-1 px-4 py-2 bg-gray-100 rounded-lg focus:outline-none pr-10"
+            required>
+
+        <button
+            type="button"
+            onclick="togglePassword('password', 'icon1')"
+            class="absolute right-3 top-1/2 -translate-y-1/2">
+
+            <span id="icon1">👁️</span>
+
+        </button>
+    </div>
+</div>
+
 
         <!-- UPLOAD KTP -->
         <div class="mb-4">
@@ -121,6 +128,21 @@
     </form>
 
 </div>
+<script>
+function togglePassword()
+{
+    const password = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    if(password.type === 'password'){
+        password.type = 'text';
+        eyeIcon.innerHTML = '🙈';
+    }else{
+        password.type = 'password';
+        eyeIcon.innerHTML = '👁️';
+    }
+}
+</script>
 
 </body>
 </html>

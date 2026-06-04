@@ -102,22 +102,25 @@
 
 
     <!-- KANAN: GAMBAR + OVERLAY -->
-    <div class="hidden md:block relative">
+<div class="hidden md:block relative">
 
-        <!-- GAMBAR -->
-        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
-             class="w-full h-full object-cover">
+    <!-- GAMBAR -->
+    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+         class="w-full h-full object-cover">
 
-        <!-- OVERLAY GELAP -->
-        <div class="absolute inset-0 bg-black/40"></div>
+    <!-- OVERLAY GELAP -->
+    <div class="absolute inset-0 bg-black/40"></div>
 
-        <!-- TEXT OPSIONAL (BIAR MIRIP APP REAL) -->
-        <div class="absolute bottom-10 left-10 text-white">
-            <h2 class="text-2xl font-bold">Temukan Kost Impianmu</h2>
-            <p class="text-sm text-gray-200">
-                Ribuan pilihan kost terbaik menunggumu
-            </p>
-        </div>
+    <!-- TEXT TENGAH -->
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-8">
+
+        <h2 class="text-4xl font-bold">
+            Temukan Kost Yang Kamu cari di sini
+        </h2>
+
+        <p class="text-lg text-gray-200 mt-3">
+            Ribuan pilihan kost terbaik menunggumu
+        </p>
 
     </div>
 

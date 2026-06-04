@@ -8,6 +8,7 @@
 <body class="h-screen">
 
 <div class="grid grid-cols-1 md:grid-cols-2 h-full">
+    
 
     <!-- KIRI: FORM -->
     <div class="flex items-center justify-center bg-white px-10">
@@ -53,6 +54,11 @@
                     <input type="hidden" name="role" id="roleInput" value="costumer">
 
                 </div>
+                @if ($errors->any())
+    <div class="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-4">
+        {{ $errors->first() }}
+    </div>
+@endif
 
                 <div id="waField" class="mb-4 hidden">
                     <label>Nomor WhatsApp</label>

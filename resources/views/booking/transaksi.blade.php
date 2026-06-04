@@ -68,9 +68,17 @@
                 </p>
             </div>
 
-            <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm">
-                {{ ucfirst($booking->status) }}
-            </span>
+            <span class="text-xs px-3 py-1 rounded-full font-medium
+@if($booking->status == 'disetujui')
+    bg-green-100 text-green-700
+@elseif($booking->status == 'ditolak')
+    bg-red-100 text-red-700
+@else
+    bg-yellow-100 text-yellow-700
+@endif
+">
+    {{ ucfirst($booking->status) }}
+</span>
 
         </div>
 

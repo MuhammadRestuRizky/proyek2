@@ -158,10 +158,12 @@
         <!-- METODE -->
         <label class="block font-bold mb-2">Pilih Metode Pembayaran</label>
 
-<select name="metode" class="w-full border rounded p-3" required>
+<select name="payment_method_id"
+        class="w-full border rounded p-3"
+        required>
 
     @foreach($kost->pemilik->paymentMethods->where('is_active', true) as $payment)
-        <option value="{{ $payment->method_name }}">
+        <option value="{{ $payment->id }}">
             {{ $payment->method_name }} - {{ $payment->account_number }}
         </option>
     @endforeach

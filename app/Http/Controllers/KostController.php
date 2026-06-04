@@ -52,6 +52,11 @@ public function login(Request $request)
             $query->where('gender', $request->gender);
         }
 
+        // 🏠 FILTER TIPE
+        if ($request->filled('tipe') && $request->tipe != 'semua') {
+            $query->where('tipe', $request->tipe);
+        }
+
         // 🚿 FILTER KAMAR MANDI
         if ($request->filled('kamar_mandi')) {
             $query->where('kamar_mandi', $request->kamar_mandi);
@@ -92,34 +97,46 @@ public function login(Request $request)
 
 // ✅ VALIDASI DI SINI (PALING ATAS)
             $request->validate([
-                'nama' => 'required',
-                'no_telp' => 'required',
-                'tanggal_masuk' => 'required|date',
-                'durasi' => 'required|numeric|min:1',
-                'metode' => 'required'
-            ]);
+            'nama' => 'required',
+            'no_telp' => 'required',
+            'tanggal_masuk' => 'required|date',
+            'durasi' => 'required|numeric|min:1',
+            'payment_method_id' => 'required|exists:payment_methods,id'
+        ]);
 
         $kost = Kost::findOrFail($request->kost_id);
 
         $total = $kost->harga * $request->durasi;
 
-        $booking = Booking::create([
-            'user_id' => auth()->id(),
-            'kost_id' => $kost->id,
-            'nama' => $request->nama,
-            'no_telp' => $request->no_telp,
-            'tanggal_masuk' => $request->tanggal_masuk,
-            'durasi' => $request->durasi,
-            'metode' => $request->metode,
-            'total' => $total,
-            'status' => 'pending'
-        ]);
+        $paymentMethod = \App\Models\PaymentMethod::findOrFail(
+    $request->payment_method_id
+);
+
+$booking = Booking::create([
+    'user_id' => auth()->id(),
+    'kost_id' => $kost->id,
+    'nama' => $request->nama,
+    'no_telp' => $request->no_telp,
+    'tanggal_masuk' => $request->tanggal_masuk,
+    'durasi' => $request->durasi,
+
+    'payment_method_id' => $paymentMethod->id,
+
+    // tetap simpan metode lama agar booking lama tidak rusak
+    'metode' => $paymentMethod->method_name,
+
+    'total' => $total,
+    'status' => 'pending'
+]);
         return redirect()->route('booking.show', $booking->id);
     }
 
     public function showBooking($id)
     {
-        $booking = Booking::with(['kost.pemilik.paymentMethods'])->findOrFail($id);
+        $booking = Booking::with([
+            'paymentMethod',
+            'kost.pemilik.paymentMethods'
+        ])->findOrFail($id);
 
         return view('booking.show', compact('booking'));
     }
@@ -132,20 +149,25 @@ public function login(Request $request)
     }
 
     // ✅ DASHBOARD PEMILIK
-    public function dashboardPemilik()
-    {
-        if (auth()->user()->role !== 'pemilik') {
-            abort(403);
-        }
-
-        $kosts = Kost::with('fotos')
-            ->where('user_id', auth()->id())
-            ->where('status_iklan', 'aktif')
-            ->latest()
-            ->get();
-
-        return view('pemilik.dashboard', compact('kosts'));
+    public function dashboardPemilik(Request $request)
+{
+    if (auth()->user()->role !== 'pemilik') {
+        abort(403);
     }
+
+    $query = Kost::with('fotos')
+        ->where('user_id', auth()->id())
+        ->where('status_iklan', 'aktif');
+
+    // FILTER TIPE
+    if ($request->filled('tipe')) {
+        $query->where('tipe', $request->tipe);
+    }
+
+    $kosts = $query->latest()->get();
+
+    return view('pemilik.dashboard', compact('kosts'));
+}
 
     // FORM CREATE
     public function create()
